@@ -31,13 +31,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '14'
 
-      - name: Install Stylelint
-        run: npm install stylelint stylelint-config-standard
+      - name: Install dependencies
+        run: npm install
 
       - name: Lint CSS
-        run: stylelint "dist/tokens.css"
+        run: npx stylelint "dist/tokens.css"
