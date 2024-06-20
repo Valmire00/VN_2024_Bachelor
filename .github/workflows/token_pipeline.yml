@@ -1,0 +1,40 @@
+name: Design Tokens Pipeline
+
+on: [pull_request]
+
+jobs:
+  json_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Validate JSON Syntax
+        uses: amannn/action-jsonlint@v1
+        with:
+          file: 'tokens.json'
+
+  convert_to_css:
+    runs-on: ubuntu-latest
+    needs: json_lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Convert JSON to CSS
+        run: |
+          mkdir -p dist
+          jq -r 'to_entries | .[] | "--\(.key): \(.value);" ' tokens.json > dist/tokens.css
+
+  css_lint:
+    runs-on: ubuntu-latest
+    needs: convert_to_css
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Stylelint
+        run: npm install -g stylelint stylelint-config-standard
+
+      - name: Lint CSS
+        run: stylelint "dist/tokens.css"
