@@ -32,7 +32,7 @@ jobs:
 
       - name: Verify CSS creation
         run: |
-          if [ ! -f dist/tokens.css ]; then
+          if [ ! -f build/web/variables.css ]; then
             echo "CSS file not created!"
             exit 1
           else
@@ -40,7 +40,7 @@ jobs:
           fi
 
       - name: Display CSS content
-        run: cat dist/tokens.css
+        run: cat build/web/variables.css
 
   css_lint:
     runs-on: ubuntu-latest
@@ -58,4 +58,4 @@ jobs:
         run: npm install
 
       - name: Lint CSS
-        run: npx stylelint "dist/tokens.css"
+        run: npx stylelint "build/web/variables.css"
