@@ -10,9 +10,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Validate JSON Syntax
-        uses: amannn/action-jsonlint@v1
-        with:
-          file: 'tokens.json'
+        run: jq empty tokens.json
 
   convert_to_css:
     runs-on: ubuntu-latest
