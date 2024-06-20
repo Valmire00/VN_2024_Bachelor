@@ -24,6 +24,13 @@ jobs:
           mkdir -p dist
           jq -r 'to_entries | .[] | "--\(.key): \(.value);" ' tokens.json > dist/tokens.css
 
+      - name: Verify CSS creation
+        run: |
+          if [ ! -f dist/tokens.css ]; then
+            echo "CSS file not created!"
+            exit 1
+          fi
+
   css_lint:
     runs-on: ubuntu-latest
     needs: convert_to_css
