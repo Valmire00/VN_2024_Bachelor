@@ -1,18 +1,15 @@
 {
   "name": "thesis_fr_ss2024",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node convert.js"
+    "lint:json": "eslint src/tokens/tokens.json",
+    "build": "style-dictionary build",
+    "lint:css": "stylelint 'build/web/**/*.css'"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
+    "eslint": "^7.32.0",
     "style-dictionary": "^3.0.0",
-    "stylelint": "^14.0.0",
-    "stylelint-config-standard": "^24.0.0"
+    "stylelint": "^13.13.1",
+    "jq": "^1.6"
   }
 }
