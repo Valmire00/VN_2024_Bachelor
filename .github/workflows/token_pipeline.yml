@@ -22,6 +22,8 @@ jobs:
       - name: Convert JSON to CSS
         run: |
           mkdir -p dist
+          echo "Contents of tokens.json:"
+          cat tokens.json
           jq -r 'to_entries | .[] | "--\(.key): \(.value);" ' tokens.json > dist/tokens.css
           echo "Contents of dist/tokens.css:"
           cat dist/tokens.css
