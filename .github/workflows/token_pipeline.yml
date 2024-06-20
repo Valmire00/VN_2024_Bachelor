@@ -35,6 +35,8 @@ jobs:
           if [ ! -f dist/tokens.css ]; then
             echo "CSS file not created!"
             exit 1
+          else
+            echo "CSS file created successfully"
           fi
 
       - name: Display CSS content
