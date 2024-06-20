@@ -23,6 +23,8 @@ jobs:
         run: |
           mkdir -p dist
           jq -r 'to_entries | .[] | "--\(.key): \(.value);" ' tokens.json > dist/tokens.css
+          echo "Contents of dist/tokens.css:"
+          cat dist/tokens.css
 
       - name: Verify CSS creation
         run: |
