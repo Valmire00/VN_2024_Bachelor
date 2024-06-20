@@ -27,8 +27,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Convert JSON to CSS with Style Dictionary
-        run: npx style-dictionary build
+      - name: Convert JSON to CSS
+        run: npm run build
 
       - name: Verify CSS creation
         run: |
@@ -38,9 +38,6 @@ jobs:
           else
             echo "CSS file created successfully"
           fi
-
-      - name: Display CSS content
-        run: cat build/web/variables.css
 
   css_lint:
     runs-on: ubuntu-latest
@@ -58,4 +55,4 @@ jobs:
         run: npm install
 
       - name: Lint CSS
-        run: npx stylelint "build/web/variables.css"
+        run: npx stylelint "build/web/**/*.css"

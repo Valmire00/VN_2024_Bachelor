@@ -1,15 +1,14 @@
 {
-  "name": "thesis_fr_ss2024",
-  "version": "1.0.0",
   "scripts": {
     "lint:json": "eslint src/tokens/tokens.json",
     "build": "style-dictionary build",
     "lint:css": "stylelint 'build/web/**/*.css'"
   },
-  "devDependencies": {
-    "eslint": "^7.32.0",
+  "dependencies": {
     "style-dictionary": "^3.0.0",
+    "eslint": "^7.32.0",
+    "json-eslint-parser": "^1.2.0",
     "stylelint": "^13.13.1",
-    "jq": "^1.6"
+    "stylelint-config-standard": "^21.0.0"
   }
 }
