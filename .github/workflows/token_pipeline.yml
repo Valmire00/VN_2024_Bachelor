@@ -19,22 +19,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Display JSON file content
-        run: cat tokens.json
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
 
       - name: Convert JSON to CSS
-        run: |
-          mkdir -p dist
-          jq -r 'to_entries | .[] | "--\(.key): \(.value);" ' tokens.json > dist/tokens.css
-          echo "Contents of dist/tokens.css:"
-          cat dist/tokens.css
-
-      - name: Verify CSS creation
-        run: |
-          if [ ! -f dist/tokens.css ]; then
-            echo "CSS file not created!"
-            exit 1
-          fi
+        run: npm run convert
 
   css_lint:
     runs-on: ubuntu-latest
