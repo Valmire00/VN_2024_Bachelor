@@ -1,14 +1,40 @@
 {
     "source": ["tokens.json"],
     "platforms": {
-      "css": {
-        "transformGroup": "css",
-        "buildPath": "dist/",
-        "files": [{
-          "destination": "tokens.css",
-          "format": "css/variables"
-        }]
+      "web": {
+        "transformGroup": "web",
+        "buildPath": "build/web/",
+        "files": [
+          {
+            "destination": "variables.css",
+            "format": "css/variables"
+          }
+        ]
+      },
+      "ios": {
+        "transformGroup": "ios",
+        "buildPath": "build/ios/",
+        "files": [
+          {
+            "destination": "StyleDictionaryColor.h",
+            "format": "ios/colors.h"
+          },
+          {
+            "destination": "StyleDictionaryColor.m",
+            "format": "ios/colors.m"
+          }
+        ]
+      },
+      "android": {
+        "transformGroup": "android",
+        "buildPath": "build/android/",
+        "files": [
+          {
+            "destination": "colors.xml",
+            "format": "android/colors"
+          }
+        ]
       }
     }
   }
-
+  
