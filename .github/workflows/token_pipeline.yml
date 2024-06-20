@@ -28,7 +28,7 @@ jobs:
         run: npm install
 
       - name: Convert JSON to CSS
-        run: npm run convert
+        run: npm run build
 
       - name: Verify CSS creation
         run: |
