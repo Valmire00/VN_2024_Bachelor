@@ -36,76 +36,68 @@ const report = [
 fs.writeFileSync(outputFilePath, report);
 */
 
+// categorize_changes.cjs
 const fs = require('fs');
 
-// Hilfsfunktion zum Einlesen von CSS-Dateien
+// Helper function to read a CSS file and return its content as an array of lines
 function readCSSFile(filePath) {
-    return fs.readFileSync(filePath, 'utf8');
+  return fs.readFileSync(filePath, 'utf-8').split('\n');
 }
 
-// Funktion zur Extraktion der Tokens aus der CSS-Datei
-function extractTokens(cssContent) {
-    const tokenRegex = /(--[^:]+):\s*([^;]+);/g;
-    const tokens = {};
-    let match;
-    while ((match = tokenRegex.exec(cssContent)) !== null) {
-        tokens[match[1]] = match[2];
+// Helper function to categorize changes between two CSS files
+function categorizeChanges(newCSS, oldCSS) {
+  const simpleChanges = [];
+  const criticalChanges = [];
+
+  const newTokens = new Set(newCSS);
+  const oldTokens = new Set(oldCSS);
+
+  newTokens.forEach((line) => {
+    if (!oldTokens.has(line)) {
+      simpleChanges.push(`Added: ${line}`);
     }
-    return tokens;
-}
+  });
 
-// Funktion zur Kategorisierung der Änderungen
-function categorizeChanges(newTokens, oldTokens) {
-    const simpleChanges = [];
-    const criticalChanges = [];
-
-    const allKeys = new Set([...Object.keys(newTokens), ...Object.keys(oldTokens)]);
-
-    allKeys.forEach(key => {
-        if (!(key in oldTokens)) {
-            criticalChanges.push(`New token added: ${key}: ${newTokens[key]}`);
-        } else if (!(key in newTokens)) {
-            criticalChanges.push(`Token removed: ${key}`);
-        } else if (newTokens[key] !== oldTokens[key]) {
-            simpleChanges.push(`Changed ${key} from "${oldTokens[key]}" to "${newTokens[key]}"`);
-        }
-    });
-
-    // Doppelte Tokens suchen und als kritische Änderung kennzeichnen
-    const tokenMap = new Map();
-    for (const key in newTokens) {
-        if (tokenMap.has(key)) {
-            criticalChanges.push(`Duplicate token detected: ${key}`);
-        } else {
-            tokenMap.set(key, newTokens[key]);
-        }
+  oldTokens.forEach((line) => {
+    if (!newTokens.has(line)) {
+      criticalChanges.push(`Removed: ${line}`);
     }
+  });
 
-    return { simpleChanges, criticalChanges };
+  return { simpleChanges, criticalChanges };
 }
 
-// Hauptfunktion
+// Main function
 function main() {
-    const [newFilePath, oldFilePath, outputFilePath] = process.argv.slice(2);
+  const newCSSPath = process.argv[2];
+  const oldCSSPath = process.argv[3];
+  const outputPath = process.argv[4];
 
-    const newCSSContent = readCSSFile(newFilePath);
-    const oldCSSContent = readCSSFile(oldFilePath);
+  console.log(`Reading new CSS file from: ${newCSSPath}`);
+  console.log(`Reading old CSS file from: ${oldCSSPath}`);
+  
+  if (!fs.existsSync(newCSSPath)) {
+    console.error(`File not found: ${newCSSPath}`);
+    process.exit(1);
+  }
 
-    const newTokens = extractTokens(newCSSContent);
-    const oldTokens = extractTokens(oldCSSContent);
+  if (!fs.existsSync(oldCSSPath)) {
+    console.error(`File not found: ${oldCSSPath}`);
+    process.exit(1);
+  }
 
-    const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens);
+  const newCSS = readCSSFile(newCSSPath);
+  const oldCSS = readCSSFile(oldCSSPath);
 
-    const categorizedChanges = [
-        'Simple Changes:',
-        ...simpleChanges,
-        '',
-        'Critical Changes:',
-        ...criticalChanges
-    ].join('\n');
+  console.log('Comparing CSS files...');
+  const { simpleChanges, criticalChanges } = categorizeChanges(newCSS, oldCSS);
 
-    fs.writeFileSync(outputFilePath, categorizedChanges);
-    console.log('Changes categorized and written to', outputFilePath);
+  console.log('Writing categorized changes to file...');
+  const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
+  fs.writeFileSync(outputPath, output);
+
+  console.log('Categorized changes written successfully.');
+  console.log(output); // Print output for debugging
 }
 
 main();
