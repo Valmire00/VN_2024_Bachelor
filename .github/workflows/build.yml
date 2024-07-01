@@ -61,6 +61,20 @@ jobs:
           name: css-artifacts
           path: dist/theme/design.token.css
 
+      - name: Download previous CSS artifact
+        if: always()
+        uses: actions/download-artifact@v2
+        with:
+          name: css-artifacts
+          path: .
+
+      - name: Rename previous CSS file
+        if: always()
+        run: |
+          if [ -f ./dist/theme/design.token.css ]; then
+            mv ./dist/theme/design.token.css old_design.token.css
+          fi
+
       - name: Categorize Changes
         run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
 
@@ -69,3 +83,10 @@ jobs:
         with:
           name: categorized-changes-report
           path: categorized_changes.txt
+
+      - name: Save current CSS for next run
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: css-artifacts
+          path: dist/theme/design.token.css
