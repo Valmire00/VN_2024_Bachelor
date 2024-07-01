@@ -63,7 +63,7 @@ jobs:
 
       - name: Categorize changes
         run: |
-          node categorize_changes.js dist/theme/design.token.css old_design.token.css categorized_changes.txt
+          node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
 
       - name: Upload code diff report
         uses: actions/upload-artifact@v2
