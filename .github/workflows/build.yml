@@ -32,7 +32,7 @@ jobs:
         done
 
     - name: Convert JSON and build CSS
-      run: node build.mjs
+      run: npm run build
 
     - name: Lint CSS file
       run: npx stylelint "dist/theme/*.css"
