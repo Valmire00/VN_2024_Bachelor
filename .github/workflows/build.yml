@@ -1,23 +1,38 @@
-name: Build and Lint CSS
+name: Style Dictionary Build and Lint
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: '16'
+        node-version: '20'
 
-    - run: npm install
+    - name: Install dependencies
+      run: npm install
 
-    - name: Build CSS
-      run: npm run build
+    - name: Validate JSON syntax
+      run: |
+        for file in tokens/*.json; do
+          echo "Validating $file"
+          cat "$file" | jq empty
+        done
 
-    - name: Lint CSS
-      run: npm run lint:css
+    - name: Convert JSON and build CSS
+      run: node build.mjs
+
+    - name: Lint CSS file
+      run: npx stylelint "dist/theme/*.css"
