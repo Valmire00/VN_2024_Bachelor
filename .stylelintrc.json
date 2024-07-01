@@ -1,8 +1,11 @@
 {
-    "extends": "stylelint-config-standard",
-    "rules": {
-      "indentation": 2,
-      "number-leading-zero": "always"
-    }
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "indentation": 2,
+    "number-leading-zero": "always",
+    "color-hex-length": "short", 
+    "number-no-trailing-zeros": true, 
+    "value-keyword-case": "lower", 
+    "length-zero-no-unit": true 
   }
-  
+}
