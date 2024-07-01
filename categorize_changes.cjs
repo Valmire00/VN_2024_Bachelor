@@ -47,13 +47,19 @@ function readCSSFile(filePath) {
 function categorizeChanges(newCSS, oldCSS) {
   const simpleChanges = [];
   const criticalChanges = [];
+  const tokenSet = new Set();
 
   const newTokens = new Set(newCSS);
   const oldTokens = new Set(oldCSS);
 
   newTokens.forEach((line) => {
     if (!oldTokens.has(line)) {
-      simpleChanges.push(`Added: ${line}`);
+      if (tokenSet.has(line)) {
+        criticalChanges.push(`Duplicate: ${line}`);
+      } else {
+        simpleChanges.push(`Added: ${line}`);
+        tokenSet.add(line);
+      }
     }
   });
 

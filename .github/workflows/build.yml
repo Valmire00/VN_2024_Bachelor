@@ -1,4 +1,4 @@
-name: Lint, Build, and Check CSS
+name: Lint, Build, Check, and Categorize CSS
 
 on: [push, pull_request]
 permissions:
@@ -34,42 +34,8 @@ jobs:
       - name: List dist/theme directory
         run: ls -la dist/theme
 
-      - name: Ensure old_design.token.css exists
-        run: |
-          if [ ! -f old_design.token.css ]; then
-            echo "Creating placeholder for old_design.token.css"
-            echo "/* Empty placeholder */" > old_design.token.css
-          fi
-
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
-
-      - name: Generate code diff
-        run: |
-          diff dist/theme/design.token.css old_design.token.css > code_diff.txt || true
-
-      - name: Compare and categorize changes
-        run: |
-          node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
-          cat categorized_changes.txt
-
-      - name: Upload CSS artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: css-artifacts
-          path: dist/theme/design.token.css
-
-      - name: Upload code diff
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-diff
-          path: code_diff.txt
-
-      - name: Upload categorized changes
-        uses: actions/upload-artifact@v2
-        with:
-          name: categorized-changes
-          path: categorized_changes.txt
 
       - name: Check for changes
         id: git-status
@@ -81,25 +47,28 @@ jobs:
             echo "has_changes=true" >> $GITHUB_ENV
           fi
 
-      - name: Stash changes
-        if: env.has_changes == 'true'
-        run: git stash
-
-      - name: Pull with rebase
-        run: git pull --rebase origin main
-
-      - name: Apply stashed changes
-        if: env.has_changes == 'true'
-        run: git stash pop
-
       - name: Commit and push changes
         if: env.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git add .
           git commit -m 'Apply Stylelint fixes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
-      - name: Clear stash
-        run: git stash clear
+      - name: Upload CSS artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: css-artifacts
+          path: dist/theme/design.token.css
+
+      - name: Generate Code Diff
+        run: git diff HEAD~1 HEAD > code_diff.txt
+
+      - name: Categorize Changes
+        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+
+      - name: Upload Categorized Changes
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt
