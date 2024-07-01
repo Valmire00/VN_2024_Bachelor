@@ -1,10 +1,8 @@
 name: Lint, Build, and Check CSS
 
 on: [push, pull_request]
-
 permissions:
   contents: write
-
 jobs:
   lint-build-check:
     runs-on: ubuntu-latest
@@ -57,36 +55,17 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
-      - name: Save old CSS file
-        run: |
-          if git show HEAD^:dist/theme/design.token.css; then
-            git show HEAD^:dist/theme/design.token.css > old_design.token.css
-          else
-            echo "" > old_design.token.css
-          fi
-
-      - name: Generate code diff report
-        run: |
-          git diff HEAD^ HEAD -- dist/theme/design.token.css > code_diff.txt
-
-      - name: Categorize changes
-        run: |
-          node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
-
-      - name: Upload code diff report
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-diff
-          path: code_diff.txt
-
-      - name: Upload categorized changes report
-        uses: actions/upload-artifact@v2
-        with:
-          name: categorized-changes
-          path: categorized_changes.txt
-
       - name: Upload CSS artifacts
         uses: actions/upload-artifact@v2
         with:
           name: css-artifacts
           path: dist/theme/design.token.css
+
+      - name: Categorize Changes
+        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+
+      - name: Upload Change Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes-report
+          path: categorized_changes.txt

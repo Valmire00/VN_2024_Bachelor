@@ -36,7 +36,7 @@ const report = [
 fs.writeFileSync(outputFilePath, report);
 */
 
-import fs from 'fs';
+const fs = require('fs');
 
 // Hilfsfunktion zum Einlesen von CSS-Dateien
 function readCSSFile(filePath) {
