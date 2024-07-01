@@ -59,11 +59,11 @@ jobs:
 
       - name: Generate code diff report
         run: |
-          git diff HEAD^ HEAD > code_diff.txt
+          git diff HEAD^ HEAD -- dist/theme/design.token.css > code_diff.txt
 
       - name: Categorize changes
         run: |
-          node categorize_changes.js code_diff.txt categorized_changes.txt
+          node categorize_changes.js dist/theme/design.token.css old_design.token.css categorized_changes.txt
 
       - name: Upload code diff report
         uses: actions/upload-artifact@v2

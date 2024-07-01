@@ -1,27 +1,26 @@
 const fs = require('fs');
+const diff = require('diff');
 
-const diffFilePath = process.argv[2];
-const outputFilePath = process.argv[3];
+const oldFilePath = process.argv[2];
+const newFilePath = process.argv[3];
+const outputFilePath = process.argv[4];
 
-const diff = fs.readFileSync(diffFilePath, 'utf8');
+const oldFileContent = fs.readFileSync(oldFilePath, 'utf8');
+const newFileContent = fs.readFileSync(newFilePath, 'utf8');
+
+const changes = diff.diffLines(oldFileContent, newFileContent);
 
 const simpleChanges = [];
 const criticalChanges = [];
 
 const variableChangeRegex = /^\s*--.*:\s*.+;/;
 
-diff.split('\n').forEach(line => {
-  if (line.startsWith('+') && !line.startsWith('+++')) {
-    if (variableChangeRegex.test(line)) {
-      simpleChanges.push(line);
+changes.forEach((part) => {
+  if (part.added || part.removed) {
+    if (variableChangeRegex.test(part.value)) {
+      simpleChanges.push(part.value);
     } else {
-      criticalChanges.push(line);
-    }
-  } else if (line.startsWith('-') && !line.startsWith('---')) {
-    if (variableChangeRegex.test(line)) {
-      simpleChanges.push(line);
-    } else {
-      criticalChanges.push(line);
+      criticalChanges.push(part.value);
     }
   }
 });
