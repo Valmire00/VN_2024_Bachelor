@@ -58,9 +58,12 @@ jobs:
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
       - name: Save old CSS file
-        if: steps.git-status.outputs.has_changes == 'true'
         run: |
-          git show HEAD^:dist/theme/design.token.css > old_design.token.css || echo "" > old_design.token.css
+          if git show HEAD^:dist/theme/design.token.css; then
+            git show HEAD^:dist/theme/design.token.css > old_design.token.css
+          else
+            echo "" > old_design.token.css
+          fi
 
       - name: Generate code diff report
         run: |
