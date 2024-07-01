@@ -36,7 +36,6 @@ const report = [
 fs.writeFileSync(outputFilePath, report);
 */
 
-// categorize_changes.cjs
 const fs = require('fs');
 
 // Helper function to read a CSS file and return its content as an array of lines
