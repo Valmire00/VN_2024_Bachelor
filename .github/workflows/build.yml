@@ -55,8 +55,19 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
+      - name: Generate diff
+        if: env.has_changes == 'true'
+        run: git diff HEAD^ > code_diff.txt
+
       - name: Upload CSS artifacts
         uses: actions/upload-artifact@v2
         with:
           name: css-artifacts
           path: dist/theme/design.token.css
+
+      - name: Upload diff report
+        if: env.has_changes == 'true'
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-diff
+          path: code_diff.txt
