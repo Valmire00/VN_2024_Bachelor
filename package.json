@@ -1,14 +1,18 @@
 {
+  "name": "thesis-token-css",
+  "version": "1.0.0",
+  "main": "build.mjs",
+  "type":"module",
   "scripts": {
-    "lint:json": "eslint src/tokens/tokens.json",
-    "build": "style-dictionary build",
-    "lint:css": "stylelint 'build/web/**/*.css'"
+    "build": "node build.mjs",
+    "lint:css": "stylelint dist/theme/*.token.css"
   },
   "dependencies": {
-    "style-dictionary": "^3.0.0",
-    "eslint": "^7.32.0",
-    "json-eslint-parser": "^1.2.0",
+    "@tokens-studio/sd-transforms": "0.11.8",
+    "fs": "^0.0.1-security",
+    "lodash": "^4.17.21",
+    "style-dictionary": "3.9.0",
     "stylelint": "^13.13.1",
-    "stylelint-config-standard": "^21.0.0"
+    "stylelint-config-standard": "^22.0.0"
   }
 }

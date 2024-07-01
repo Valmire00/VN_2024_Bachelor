@@ -1,0 +1,23 @@
+name: Build and Lint CSS
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - run: npm install
+
+    - name: Build CSS
+      run: npm run build
+
+    - name: Lint CSS
+      run: npm run lint:css
