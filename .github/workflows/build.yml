@@ -33,4 +33,8 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-     
+      - name: Upload CSS artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: css-artifacts
+          path: dist/theme/*.css
