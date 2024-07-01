@@ -5,7 +5,7 @@ const oldFilePath = process.argv[2];
 const newFilePath = process.argv[3];
 const outputFilePath = process.argv[4];
 
-const oldFileContent = fs.readFileSync(oldFilePath, 'utf8');
+const oldFileContent = fs.existsSync(oldFilePath) ? fs.readFileSync(oldFilePath, 'utf8') : '';
 const newFileContent = fs.readFileSync(newFilePath, 'utf8');
 
 const changes = diff.diffLines(oldFileContent, newFileContent);
