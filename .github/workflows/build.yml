@@ -74,14 +74,22 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
+      - name: Compare and categorize changes
+        run: |
+          node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+          cat categorized_changes.txt
+
       - name: Upload CSS artifacts
         uses: actions/upload-artifact@v2
         with:
           name: css-artifacts
           path: dist/theme/design.token.css
 
-      - name: Compare and categorize changes
-        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+      - name: Upload categorized changes
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt
 
       - name: Clear stash
         run: git stash clear
