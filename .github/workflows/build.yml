@@ -1,8 +1,10 @@
 name: Lint, Build, and Check CSS
 
 on: [push, pull_request]
+
 permissions:
   contents: write
+
 jobs:
   lint-build-check:
     runs-on: ubuntu-latest
@@ -55,19 +57,28 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
-      - name: Generate diff
-        if: env.has_changes == 'true'
-        run: git diff HEAD^ > code_diff.txt
+      - name: Generate code diff report
+        run: |
+          git diff HEAD^ HEAD > code_diff.txt
+
+      - name: Categorize changes
+        run: |
+          node categorize_changes.js code_diff.txt categorized_changes.txt
+
+      - name: Upload code diff report
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-diff
+          path: code_diff.txt
+
+      - name: Upload categorized changes report
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt
 
       - name: Upload CSS artifacts
         uses: actions/upload-artifact@v2
         with:
           name: css-artifacts
           path: dist/theme/design.token.css
-
-      - name: Upload diff report
-        if: env.has_changes == 'true'
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-diff
-          path: code_diff.txt
