@@ -47,11 +47,23 @@ jobs:
             echo "has_changes=true" >> $GITHUB_ENV
           fi
 
+      - name: Stash changes
+        if: env.has_changes == 'true'
+        run: git stash
+
+      - name: Pull with rebase
+        run: git pull --rebase origin main
+
+      - name: Apply stashed changes
+        if: env.has_changes == 'true'
+        run: git stash pop
+
       - name: Commit and push changes
         if: env.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          git add .
           git commit -m 'Apply Stylelint fixes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
@@ -61,39 +73,8 @@ jobs:
           name: css-artifacts
           path: dist/theme/design.token.css
 
-      - name: Download previous CSS artifact
-        if: always()
-        uses: actions/download-artifact@v2
-        with:
-          name: css-artifacts
-          path: .
-
-      - name: Rename previous CSS file
-        if: always()
-        run: |
-          if [ -f ./design.token.css ]; then
-            mv ./design.token.css old_design.token.css
-          fi
-
-      - name: Check if current CSS exists
-        run: |
-          if [ ! -f dist/theme/design.token.css ]; then
-            echo "Current CSS file not found!"
-            exit 1
-          fi
-
-      - name: Categorize Changes
+      - name: Compare and categorize changes
         run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
 
-      - name: Upload Change Report
-        uses: actions/upload-artifact@v2
-        with:
-          name: categorized-changes-report
-          path: categorized_changes.txt
-
-      - name: Save current CSS for next run
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: css-artifacts
-          path: dist/theme/design.token.css
+      - name: Clear stash
+        run: git stash clear
