@@ -71,8 +71,15 @@ jobs:
       - name: Rename previous CSS file
         if: always()
         run: |
-          if [ -f ./dist/theme/design.token.css ]; then
-            mv ./dist/theme/design.token.css old_design.token.css
+          if [ -f ./design.token.css ]; then
+            mv ./design.token.css old_design.token.css
+          fi
+
+      - name: Check if current CSS exists
+        run: |
+          if [ ! -f dist/theme/design.token.css ]; then
+            echo "Current CSS file not found!"
+            exit 1
           fi
 
       - name: Categorize Changes
