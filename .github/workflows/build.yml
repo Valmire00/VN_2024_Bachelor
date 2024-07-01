@@ -1,7 +1,8 @@
 name: Lint, Build, and Check CSS
 
 on: [push, pull_request]
-
+permissions:
+  contents: write
 jobs:
   lint-build-check:
     runs-on: ubuntu-latest
