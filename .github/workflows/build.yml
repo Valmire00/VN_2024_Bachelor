@@ -34,6 +34,13 @@ jobs:
       - name: List dist/theme directory
         run: ls -la dist/theme
 
+      - name: Ensure old_design.token.css exists
+        run: |
+          if [ ! -f old_design.token.css ]; then
+            echo "Creating placeholder for old_design.token.css"
+            echo "/* Empty placeholder */" > old_design.token.css
+          fi
+
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
