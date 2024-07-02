@@ -1,110 +1,108 @@
-diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
-index d446620..c220325 100644
---- a/.github/workflows/build.yml
-+++ b/.github/workflows/build.yml
-@@ -3,7 +3,6 @@ name: Lint, Build, and Check CSS
- on: [push, pull_request]
- permissions:
-   contents: write
+diff --git a/build.mjs b/build.mjs
+index b8c9143..a71c12a 100644
+--- a/build.mjs
++++ b/build.mjs
+@@ -1,87 +1,3 @@
+-/*import StyleDictionary from 'style-dictionary';
+-import fs from 'fs';
+-import path from 'path';
+-import { registerTransforms } from '@tokens-studio/sd-transforms';
 -
- jobs:
-   lint-build-check:
-     runs-on: ubuntu-latest
-@@ -35,64 +34,53 @@ jobs:
-       - name: List dist/theme directory
-         run: ls -la dist/theme
- 
--      - name: Handle no previous commit
--        id: check-previous-commit
--        run: |
--          if [ $(git rev-list --count HEAD) -eq 1 ]; then
--            echo "first_commit=true" >> $GITHUB_ENV
--          else
--            echo "first_commit=false" >> $GITHUB_ENV
--          fi
+-// Funktion zum Konvertieren der JSON-Daten in das Style Dictionary-Format
+-function convertJsonToStyleDictionaryFormat(data) {
+-  const result = {
+-    properties: {}
+-  };
 -
--      - name: Generate code diff
--        if: env.first_commit == 'false'
--        run: git diff HEAD~1 HEAD > code_diff.txt
+-  // Rekursive Funktion zum Durchlaufen der JSON-Datenstruktur
+-  function traverse(obj, path = []) {
+-    Object.keys(obj).forEach(key => {
+-      const value = obj[key];
+-      if (value && typeof value === 'object' && !Array.isArray(value)) {
+-        // Wenn das Objekt ein Token mit $value enthält
+-        if (value.value !== undefined) {
+-          let tokenName = path.concat(key).join('-');
 -
--      - name: Handle first commit diff
--        if: env.first_commit == 'true'
--        run: echo "No previous commit to diff against." > code_diff.txt
+-          // Entfernen Sie führende Zahlen
+-          tokenName = tokenName.replace(/^\d+-/, '');
 -
--      - name: Extract changed files
--        if: env.first_commit == 'false'
--        run: git diff --name-only HEAD~1 HEAD > changed_files.txt
+-          result.properties[tokenName] = { value: value.value };
+-        } else {
+-          // Rekursiv durchlaufen, wenn es sich um ein verschachteltes Objekt handelt
+-          traverse(value, path.concat(key));
+-        }
+-      }
+-    });
+-  }
 -
--      - name: Handle first commit changed files
--        if: env.first_commit == 'true'
--        run: echo "All files are new in the first commit." > changed_files.txt
+-  traverse(data);
+-  return result;
+-}
 -
-       - name: Run Stylelint
-         run: npx stylelint 'dist/theme/*.css' --fix
- 
--      - name: Run categorize_changes script
--        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
-+      - name: Generate Git Diff
-+        id: git-diff
-+        run: |
-+          if [ $(git rev-parse --is-shallow-repository) ]; then
-+            git fetch --unshallow
-+          fi
-+          if [ $(git rev-parse HEAD^) ]; then
-+            git diff HEAD^ HEAD > code_diff.txt
-+          else
-+            echo "First commit, no previous commit to compare." > code_diff.txt
-+          fi
- 
--      - name: Commit and push changes
--        if: env.has_changes == 'true'
--        env:
--          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-+      - name: Check for changes
-+        id: git-status
-         run: |
-           git config --global user.name 'github-actions[bot]'
-           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-           git add .
-           if ! git diff-index --quiet HEAD; then
--            git commit -m 'Apply Stylelint fixes'
--            git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
-+            echo "has_changes=true" >> $GITHUB_ENV
-           fi
- 
--      - name: Upload code diff artifact
--        uses: actions/upload-artifact@v2
--        with:
--          name: code_diff
--          path: code_diff.txt
-+      - name: Commit and push changes
-+        if: env.has_changes == 'true'
-+        env:
-+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-+        run: |
-+          git commit -m 'Apply Stylelint fixes'
-+          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
-+
-+      - name: Categorize CSS Changes
-+        if: steps.git-diff.outputs.has_changes == 'true'
-+        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
- 
--      - name: Upload changed files artifact
-+      - name: Upload CSS artifacts
-         uses: actions/upload-artifact@v2
-         with:
--          name: changed-files
--          path: changed_files.txt
-+          name: css-artifacts
-+          path: dist/theme/*.css
- 
--      - name: Upload categorized changes artifact
-+      - name: Upload diff and categorized changes
-         uses: actions/upload-artifact@v2
-         with:
--          name: categorized-changes
--          path: categorized_changes.txt
-+          name: diff-and-categorized-changes
-+          path: |
-+            code_diff.txt
-+            categorized_changes.txt
+-// Definieren Sie den Pfad zur JSON-Datei
+-const variablesPath = path.resolve('tokens/variables2json.json');
+-
+-// Laden der JSON-Datei
+-const rawdata = fs.readFileSync(variablesPath);
+-const jsonData = JSON.parse(rawdata);
+-
+-// Überprüfen Sie die Struktur der JSON-Daten
+-console.log('Loaded JSON Data:', JSON.stringify(jsonData, null, 2));
+-
+-// Konvertieren der JSON-Daten
+-const styleDictionaryData = convertJsonToStyleDictionaryFormat(jsonData);
+-
+-// Überprüfen Sie die konvertierten Daten
+-console.log('Converted Style Dictionary Data:', JSON.stringify(styleDictionaryData, null, 2));
+-
+-// Schreiben der konvertierten Daten in eine neue Datei
+-fs.writeFileSync('tokens/variables2json.json', JSON.stringify(styleDictionaryData, null, 2));
+-
+-// Style Dictionary konfigurieren
+-registerTransforms(StyleDictionary, {
+-  casing: 'kebab',
+-});
+-
+-const sd = StyleDictionary.extend({
+-  source: ['tokens/variables2json.json'],
+-  platforms: {
+-    css: {
+-      buildPath: 'dist/theme/',
+-      files: [
+-        {
+-          destination: 'design.token.css',
+-          format: 'css/variables',
+-        },
+-      ],
+-      transformGroup: 'tokens-studio',
+-    },
+-  },
+-});
+-
+-console.log('Build started...');
+-sd.cleanAllPlatforms();
+-console.log('\n======================================');
+-sd.buildAllPlatforms();
+-console.log('\n======================================');
+-console.log('\nBuild completed!\n');
+-
+-*/
+ // build.mjs
+ import StyleDictionary from 'style-dictionary';
+ import fs from 'fs';
+diff --git a/hallo.js b/hallo.js
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/tokens/variablesToken2.json b/tokens/variablesToken2.json
+index 7e34859..4b9fda6 100644
+--- a/tokens/variablesToken2.json
++++ b/tokens/variablesToken2.json
+@@ -1,8 +1,5 @@
+ {
+   "properties": {
+-    "theme-variables-vuestic-light-accent-va-primary": {
+-      "value": "#154ec1"
+-    },
+     "theme-variables-vuestic-light-accent-va-secondary": {
+       "value": "#767c88"
+     },
