@@ -1,8 +1,9 @@
-name: Lint, Build, Check CSS, and Categorize Changes
+name: Lint, Build, Check, and Categorize CSS
 
 on: [push, pull_request]
 permissions:
   contents: write
+
 jobs:
   lint-build-check:
     runs-on: ubuntu-latest
@@ -38,15 +39,10 @@ jobs:
         run: npx stylelint 'dist/theme/*.css' --fix
 
       - name: Generate code diff
-        run: |
-          if [ $(git rev-list --count HEAD) -eq 1 ]; then
-            echo "First commit, no previous commit to diff against." > code_diff.txt
-          else
-            git diff HEAD~1 HEAD > code_diff.txt
-          fi
+        run: git diff HEAD~1 HEAD > code_diff.txt || echo "No previous commit, skipping diff."
 
       - name: Categorize changes
-        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+        run: node categorize_changes.cjs tokens/new_tokens.json tokens/old_tokens.json categorized_changes.txt || echo "No previous JSON files to compare."
 
       - name: Check for changes
         id: git-status
@@ -63,23 +59,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git commit -m 'Apply Stylelint fixes'
+          git commit -m 'Apply Stylelint fixes and categorized changes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
-      - name: Upload CSS artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: css-artifacts
-          path: dist/theme/design.token.css
-
-      - name: Upload code diff
-        uses: actions/upload-artifact@v2
-        with:
-          name: code-diff
-          path: code_diff.txt
-
-      - name: Upload categorized changes
-        uses: actions/upload-artifact@v2
-        with:
-          name: categorized-changes
-          path: categorized_changes.txt
+          name: diff-and-changes
+          path: |
+            code_diff.txt
+            categorized_changes.txt

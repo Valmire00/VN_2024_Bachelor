@@ -108,61 +108,61 @@ function main() {
 main();
 */
 
-// categorize_changes.cjs
 const fs = require('fs');
 
-// Helper function to read a CSS file and return its content as an array of lines
-function readCSSFile(filePath) {
-  return fs.readFileSync(filePath, 'utf-8').split('\n');
+function readJSONFile(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
-// Helper function to categorize changes between two CSS files
-function categorizeChanges(newCSS, oldCSS) {
+function categorizeChanges(newJSON, oldJSON) {
   const simpleChanges = [];
   const criticalChanges = [];
 
-  const newTokens = new Set(newCSS);
-  const oldTokens = new Set(oldCSS);
+  const newKeys = Object.keys(newJSON);
+  const oldKeys = Object.keys(oldJSON);
 
-  newTokens.forEach((line) => {
-    if (!oldTokens.has(line)) {
-      simpleChanges.push(`Added: ${line}`);
+  // Check for added or changed variables
+  newKeys.forEach((key) => {
+    if (!oldKeys.includes(key)) {
+      criticalChanges.push(`Added: ${key}`);
+    } else if (newJSON[key] !== oldJSON[key]) {
+      simpleChanges.push(`Changed: ${key} from ${oldJSON[key]} to ${newJSON[key]}`);
     }
   });
 
-  oldTokens.forEach((line) => {
-    if (!newTokens.has(line)) {
-      criticalChanges.push(`Removed: ${line}`);
+  // Check for removed variables
+  oldKeys.forEach((key) => {
+    if (!newKeys.includes(key)) {
+      criticalChanges.push(`Removed: ${key}`);
     }
   });
 
   return { simpleChanges, criticalChanges };
 }
 
-// Main function
 function main() {
-  const newCSSPath = process.argv[2];
-  const oldCSSPath = process.argv[3];
+  const newJSONPath = process.argv[2];
+  const oldJSONPath = process.argv[3];
   const outputPath = process.argv[4];
 
-  console.log(`Reading new CSS file from: ${newCSSPath}`);
-  console.log(`Reading old CSS file from: ${oldCSSPath}`);
-  
-  if (!fs.existsSync(newCSSPath)) {
-    console.error(`File not found: ${newCSSPath}`);
+  console.log(`Reading new JSON file from: ${newJSONPath}`);
+  console.log(`Reading old JSON file from: ${oldJSONPath}`);
+
+  if (!fs.existsSync(newJSONPath)) {
+    console.error(`File not found: ${newJSONPath}`);
     process.exit(1);
   }
 
-  if (!fs.existsSync(oldCSSPath)) {
-    console.error(`File not found: ${oldCSSPath}`);
+  if (!fs.existsSync(oldJSONPath)) {
+    console.error(`File not found: ${oldJSONPath}`);
     process.exit(1);
   }
 
-  const newCSS = readCSSFile(newCSSPath);
-  const oldCSS = readCSSFile(oldCSSPath);
+  const newJSON = readJSONFile(newJSONPath);
+  const oldJSON = readJSONFile(oldJSONPath);
 
-  console.log('Comparing CSS files...');
-  const { simpleChanges, criticalChanges } = categorizeChanges(newCSS, oldCSS);
+  console.log('Comparing JSON files...');
+  const { simpleChanges, criticalChanges } = categorizeChanges(newJSON, oldJSON);
 
   console.log('Writing categorized changes to file...');
   const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
