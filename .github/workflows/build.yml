@@ -3,7 +3,6 @@ name: Lint, Build, and Check CSS
 on: [push, pull_request]
 permissions:
   contents: write
-
 jobs:
   lint-build-check:
     runs-on: ubuntu-latest
@@ -35,64 +34,53 @@ jobs:
       - name: List dist/theme directory
         run: ls -la dist/theme
 
-      - name: Handle no previous commit
-        id: check-previous-commit
-        run: |
-          if [ $(git rev-list --count HEAD) -eq 1 ]; then
-            echo "first_commit=true" >> $GITHUB_ENV
-          else
-            echo "first_commit=false" >> $GITHUB_ENV
-          fi
-
-      - name: Generate code diff
-        if: env.first_commit == 'false'
-        run: git diff HEAD~1 HEAD > code_diff.txt
-
-      - name: Handle first commit diff
-        if: env.first_commit == 'true'
-        run: echo "No previous commit to diff against." > code_diff.txt
-
-      - name: Extract changed files
-        if: env.first_commit == 'false'
-        run: git diff --name-only HEAD~1 HEAD > changed_files.txt
-
-      - name: Handle first commit changed files
-        if: env.first_commit == 'true'
-        run: echo "All files are new in the first commit." > changed_files.txt
-
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Run categorize_changes script
-        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+      - name: Generate Git Diff
+        id: git-diff
+        run: |
+          if [ $(git rev-parse --is-shallow-repository) ]; then
+            git fetch --unshallow
+          fi
+          if [ $(git rev-parse HEAD^) ]; then
+            git diff HEAD^ HEAD > code_diff.txt
+          else
+            echo "First commit, no previous commit to compare." > code_diff.txt
+          fi
+
+      - name: Check for changes
+        id: git-status
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          fi
 
       - name: Commit and push changes
         if: env.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .
-          if ! git diff-index --quiet HEAD; then
-            git commit -m 'Apply Stylelint fixes'
-            git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
-          fi
+          git commit -m 'Apply Stylelint fixes'
+          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
-      - name: Upload code diff artifact
+      - name: Categorize CSS Changes
+        if: steps.git-diff.outputs.has_changes == 'true'
+        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+
+      - name: Upload CSS artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: code_diff
-          path: code_diff.txt
+          name: css-artifacts
+          path: dist/theme/*.css
 
-      - name: Upload changed files artifact
+      - name: Upload diff and categorized changes
         uses: actions/upload-artifact@v2
         with:
-          name: changed-files
-          path: changed_files.txt
-
-      - name: Upload categorized changes artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: categorized-changes
-          path: categorized_changes.txt
+          name: diff-and-categorized-changes
+          path: |
+            code_diff.txt
+            categorized_changes.txt
