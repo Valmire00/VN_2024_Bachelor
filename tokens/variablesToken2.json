@@ -1,5 +1,11 @@
 {
   "properties": {
+    "theme-variables-vuestic-light-accent-va-primary": {
+      "value": "#154ec1"
+    },
+    "theme-variables-vuestic-light-accent-va-secondary": {
+      "value": "#767c88"
+    },
     "theme-variables-vuestic-light-accent-va-success": {
       "value": "#3d9209"
     },
