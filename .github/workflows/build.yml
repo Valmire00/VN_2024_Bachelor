@@ -37,6 +37,17 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
+      - name: Handle no previous commit
+        run: |
+          if [ $(git rev-parse --abbrev-ref HEAD) = "main" ]; then
+            if [ $(git rev-list --count HEAD) -eq 1 ]; then
+              echo "First commit on main, skipping diff."
+              echo "simple_changes=" > simple_changes.txt
+              echo "critical_changes=" > critical_changes.txt
+              exit 0
+            fi
+          fi
+
       - name: Generate code diff
         run: git diff HEAD~1 HEAD > code_diff.txt
 
