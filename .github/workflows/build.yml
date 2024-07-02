@@ -21,13 +21,31 @@ jobs:
           rm -rf node_modules package-lock.json
           npm install
 
+      - name: Check for previous commit
+        id: check_previous_commit
+        run: |
+          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
+            echo "has_previous_commit=false" >> $GITHUB_ENV
+          else
+            echo "has_previous_commit=true" >> $GITHUB_ENV
+          fi
+
       - name: Generate Code Diff
+        if: env.has_previous_commit == 'true'
         id: generate_diff
         run: git diff HEAD~1 HEAD > code_diff.txt
 
       - name: List changed files
+        if: env.has_previous_commit == 'true'
         id: list_changed_files
         run: git diff --name-only HEAD~1 HEAD > changed_files.txt
+
+      - name: Handle no previous commit
+        if: env.has_previous_commit == 'false'
+        run: |
+          echo "No previous commit found. Skipping diff generation."
+          touch code_diff.txt
+          touch changed_files.txt
 
       - name: Upload Code Diff
         uses: actions/upload-artifact@v2
