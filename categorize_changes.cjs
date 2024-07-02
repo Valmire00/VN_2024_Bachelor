@@ -108,38 +108,39 @@ function main() {
 main();
 */
 
+// categorize_json_changes.cjs
 const fs = require('fs');
 
+// Helper function to read a JSON file and return its content as an object
 function readJSONFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
+// Helper function to categorize changes between two JSON objects
 function categorizeChanges(newJSON, oldJSON) {
   const simpleChanges = [];
   const criticalChanges = [];
 
-  const newKeys = Object.keys(newJSON);
-  const oldKeys = Object.keys(oldJSON);
-
-  // Check for added or changed variables
-  newKeys.forEach((key) => {
-    if (!oldKeys.includes(key)) {
-      criticalChanges.push(`Added: ${key}`);
+  // Check for added or modified tokens
+  for (const key in newJSON) {
+    if (!oldJSON.hasOwnProperty(key)) {
+      criticalChanges.push(`Added token: ${key}`);
     } else if (newJSON[key] !== oldJSON[key]) {
-      simpleChanges.push(`Changed: ${key} from ${oldJSON[key]} to ${newJSON[key]}`);
+      simpleChanges.push(`Modified token: ${key} from ${oldJSON[key]} to ${newJSON[key]}`);
     }
-  });
+  }
 
-  // Check for removed variables
-  oldKeys.forEach((key) => {
-    if (!newKeys.includes(key)) {
-      criticalChanges.push(`Removed: ${key}`);
+  // Check for removed tokens
+  for (const key in oldJSON) {
+    if (!newJSON.hasOwnProperty(key)) {
+      criticalChanges.push(`Removed token: ${key}`);
     }
-  });
+  }
 
   return { simpleChanges, criticalChanges };
 }
 
+// Main function
 function main() {
   const newJSONPath = process.argv[2];
   const oldJSONPath = process.argv[3];
