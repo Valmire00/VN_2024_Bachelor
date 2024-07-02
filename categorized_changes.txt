@@ -1,11 +1,9 @@
 Simple Changes:
 Added: /**
 Added:  * Do not edit directly
-Added:  * Generated on Tue, 02 Jul 2024 15:32:49 GMT
+Added:  * Generated on Tue, 02 Jul 2024 15:35:46 GMT
 Added:  */
 Added: :root {
-Added:   --properties-theme-variables-vuestic-light-accent-va-secondary: #767c88;
-Added:   --properties-theme-variables-vuestic-light-accent-va-success: #3d9209;
 Added:   --properties-theme-variables-vuestic-light-accent-va-info: #158de3;
 Added:   --properties-theme-variables-vuestic-light-accent-va-danger: #e42222;
 Added:   --properties-theme-variables-vuestic-light-accent-va-warning: #ffd43a;
