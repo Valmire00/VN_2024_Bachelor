@@ -1,10 +1,10 @@
-name: Code Diff Analysis
+name: Lint, Build, and Check CSS
 
 on: [push, pull_request]
 permissions:
   contents: write
 jobs:
-  code-diff-analysis:
+  lint-build-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,43 +21,85 @@ jobs:
           rm -rf node_modules package-lock.json
           npm install
 
-      - name: Check for previous commit
-        id: check_previous_commit
+      - name: Check JSON syntax
         run: |
-          if [ $(git rev-parse --is-shallow-repository) = "true" ]; then
-            echo "has_previous_commit=false" >> $GITHUB_ENV
-          else
-            echo "has_previous_commit=true" >> $GITHUB_ENV
+          for file in tokens/*.json; do
+            echo "Checking $file"
+            cat "$file" | jq empty
+          done
+
+      - name: Build CSS from JSON tokens
+        run: node build.mjs
+
+      - name: List dist/theme directory
+        run: ls -la dist/theme
+
+      - name: Ensure old_design.token.css exists
+        run: |
+          if [ ! -f old_design.token.css ]; then
+            echo "Creating placeholder for old_design.token.css"
+            echo "/* Empty placeholder */" > old_design.token.css
           fi
 
-      - name: Generate Code Diff
-        if: env.has_previous_commit == 'true'
-        id: generate_diff
-        run: git diff HEAD~1 HEAD > code_diff.txt
+      - name: Run Stylelint
+        run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: List changed files
-        if: env.has_previous_commit == 'true'
-        id: list_changed_files
-        run: git diff --name-only HEAD~1 HEAD > changed_files.txt
-
-      - name: Handle no previous commit
-        if: env.has_previous_commit == 'false'
+      - name: Generate code diff
         run: |
-          echo "No previous commit found. Skipping diff generation."
-          touch code_diff.txt
-          touch changed_files.txt
+          diff dist/theme/design.token.css old_design.token.css > code_diff.txt || true
 
-      - name: Upload Code Diff
+      - name: Compare and categorize changes
+        run: |
+          node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
+          cat categorized_changes.txt
+
+      - name: Upload CSS artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: css-artifacts
+          path: dist/theme/design.token.css
+
+      - name: Upload code diff
         uses: actions/upload-artifact@v2
         with:
           name: code-diff
           path: code_diff.txt
 
-      - name: Upload Changed Files List
+      - name: Upload categorized changes
         uses: actions/upload-artifact@v2
         with:
-          name: changed-files
-          path: changed_files.txt
+          name: categorized-changes
+          path: categorized_changes.txt
 
-      - name: Print changed files
-        run: cat changed_files.txt
+      - name: Check for changes
+        id: git-status
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            echo "has_changes=true" >> $GITHUB_ENV
+          fi
+
+      - name: Stash changes
+        if: env.has_changes == 'true'
+        run: git stash
+
+      - name: Pull with rebase
+        run: git pull --rebase origin main
+
+      - name: Apply stashed changes
+        if: env.has_changes == 'true'
+        run: git stash pop
+
+      - name: Commit and push changes
+        if: env.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git add .
+          git commit -m 'Apply Stylelint fixes'
+          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
+
+      - name: Clear stash
+        run: git stash clear
