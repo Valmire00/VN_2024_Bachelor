@@ -96,6 +96,11 @@ jobs:
       - name: Print changed files
         run: cat changed_files.txt
 
+      - name: Save old CSS file
+        if: env.has_previous_commit == 'true'
+        run: |
+          git show HEAD~1:dist/theme/design.token.css > old_design.token.css
+
       - name: Categorize Changes
         if: env.has_previous_commit == 'true'
         run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
