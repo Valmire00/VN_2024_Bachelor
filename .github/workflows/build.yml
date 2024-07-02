@@ -1,10 +1,11 @@
-name: Lint, Build, Check CSS, and Code Diff Analysis
+name: Lint, Build, and Check CSS
 
 on: [push, pull_request]
 permissions:
   contents: write
+
 jobs:
-  lint-build-check-diff:
+  lint-build-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,79 +35,63 @@ jobs:
       - name: List dist/theme directory
         run: ls -la dist/theme
 
+      - name: Handle no previous commit
+        id: check-previous-commit
+        run: |
+          if [ $(git rev-list --count HEAD) -eq 1 ]; then
+            echo "first_commit=true" >> $GITHUB_ENV
+          else
+            echo "first_commit=false" >> $GITHUB_ENV
+          fi
+
+      - name: Generate code diff
+        if: env.first_commit == 'false'
+        run: git diff HEAD~1 HEAD > code_diff.txt
+
+      - name: Handle first commit diff
+        if: env.first_commit == 'true'
+        run: echo "No previous commit to diff against." > code_diff.txt
+
+      - name: Extract changed files
+        if: env.first_commit == 'false'
+        run: git diff --name-only HEAD~1 HEAD > changed_files.txt
+
+      - name: Handle first commit changed files
+        if: env.first_commit == 'true'
+        run: echo "All files are new in the first commit." > changed_files.txt
+
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Check for changes
-        id: git-status
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .
-          if ! git diff-index --quiet HEAD; then
-            echo "has_changes=true" >> $GITHUB_ENV
-          fi
+      - name: Run categorize_changes script
+        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
 
       - name: Commit and push changes
         if: env.has_changes == 'true'
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git commit -m 'Apply Stylelint fixes'
-          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
-
-      - name: Check for previous commit
-        id: check_previous_commit
-        run: |
-          if [ $(git rev-list --count HEAD) -eq 1 ]; then
-            echo "has_previous_commit=false" >> $GITHUB_ENV
-          else
-            echo "has_previous_commit=true" >> $GITHUB_ENV
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          if ! git diff-index --quiet HEAD; then
+            git commit -m 'Apply Stylelint fixes'
+            git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
           fi
 
-      - name: Generate Code Diff
-        if: env.has_previous_commit == 'true'
-        id: generate_diff
-        run: git diff HEAD~1 HEAD > code_diff.txt
-
-      - name: List changed files
-        if: env.has_previous_commit == 'true'
-        id: list_changed_files
-        run: git diff --name-only HEAD~1 HEAD > changed_files.txt
-
-      - name: Handle no previous commit
-        if: env.has_previous_commit == 'false'
-        run: |
-          echo "No previous commit found. Skipping diff generation."
-          touch code_diff.txt
-          touch changed_files.txt
-
-      - name: Upload Code Diff
+      - name: Upload code diff artifact
         uses: actions/upload-artifact@v2
         with:
-          name: code-diff
+          name: code_diff
           path: code_diff.txt
 
-      - name: Upload Changed Files List
+      - name: Upload changed files artifact
         uses: actions/upload-artifact@v2
         with:
           name: changed-files
           path: changed_files.txt
 
-      - name: Print changed files
-        run: cat changed_files.txt
-
-      - name: Save old CSS file
-        if: env.has_previous_commit == 'true'
-        run: |
-          git show HEAD~1:dist/theme/design.token.css > old_design.token.css
-
-      - name: Categorize Changes
-        if: env.has_previous_commit == 'true'
-        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
-
-      - name: Upload Categorized Changes
-        if: env.has_previous_commit == 'true'
+      - name: Upload categorized changes artifact
         uses: actions/upload-artifact@v2
         with:
           name: categorized-changes
