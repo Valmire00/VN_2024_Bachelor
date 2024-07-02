@@ -124,26 +124,17 @@ function categorizeChanges(newCSS, oldCSS) {
   const newTokens = new Set(newCSS);
   const oldTokens = new Set(oldCSS);
 
-  // Detect added lines
   newTokens.forEach((line) => {
     if (!oldTokens.has(line)) {
       simpleChanges.push(`Added: ${line}`);
     }
   });
 
-  // Detect removed lines
   oldTokens.forEach((line) => {
     if (!newTokens.has(line)) {
       criticalChanges.push(`Removed: ${line}`);
     }
   });
-
-  // Detect duplicate tokens
-  const allNewTokens = newCSS.filter(line => line.includes(':root') || line.includes('--'));
-  const uniqueNewTokens = new Set(allNewTokens);
-  if (allNewTokens.length !== uniqueNewTokens.size) {
-    criticalChanges.push('Duplicate token detected.');
-  }
 
   return { simpleChanges, criticalChanges };
 }

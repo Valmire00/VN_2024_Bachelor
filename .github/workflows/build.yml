@@ -1,4 +1,4 @@
-name: Lint, Build, and Check CSS
+name: Lint, Build, Check CSS, and Categorize Changes
 
 on: [push, pull_request]
 permissions:
@@ -37,17 +37,11 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Generate Git Diff
-        id: git-diff
-        run: |
-          if [ $(git rev-parse --is-shallow-repository) ]; then
-            git fetch --unshallow
-          fi
-          if [ $(git rev-parse HEAD^) ]; then
-            git diff HEAD^ HEAD > code_diff.txt
-          else
-            echo "First commit, no previous commit to compare." > code_diff.txt
-          fi
+      - name: Generate code diff
+        run: git diff HEAD~1 HEAD > code_diff.txt
+
+      - name: Categorize changes
+        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
 
       - name: Check for changes
         id: git-status
@@ -67,20 +61,20 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
 
-      - name: Categorize CSS Changes
-        if: steps.git-diff.outputs.has_changes == 'true'
-        run: node categorize_changes.cjs dist/theme/design.token.css old_design.token.css categorized_changes.txt
-
-      - name: Upload CSS artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: css-artifacts
-          path: dist/theme/*.css
+          path: dist/theme/design.token.css
 
-      - name: Upload diff and categorized changes
+      - name: Upload code diff
         uses: actions/upload-artifact@v2
         with:
-          name: diff-and-categorized-changes
-          path: |
-            code_diff.txt
-            categorized_changes.txt
+          name: code-diff
+          path: code_diff.txt
+
+      - name: Upload categorized changes
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt
