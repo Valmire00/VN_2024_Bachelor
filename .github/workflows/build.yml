@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'tokens/**'  # Pfad anpassen, falls nötig
+      - 'tokens/**'
 
 permissions:
   contents: write
