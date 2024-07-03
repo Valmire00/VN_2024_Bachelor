@@ -1,9 +1,10 @@
-name: Lint, Build, Check, and Categorize JSON Changes
+name: Lint, Build, and Check JSON Changes
 
 on:
   pull_request:
     branches:
       - main
+      - ui/*
 
 permissions:
   contents: write
@@ -58,16 +59,22 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git commit -m 'Apply Stylelint fixes'
-          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
+          git push https://${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
 
       - name: Generate code diff
         run: git diff HEAD~1 HEAD > code_diff.txt
 
-      - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens old_tokens categorized_changes.txt
-
-      - name: Upload artifacts
+      - name: Upload code diff artifact
         uses: actions/upload-artifact@v2
         with:
-          name: json-changes-artifacts
+          name: code_diff
+          path: code_diff.txt
+
+      - name: Categorize JSON changes
+        run: node categorize_json_changes.cjs tokens code_diff.txt categorized_changes.txt
+
+      - name: Upload categorized changes artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized_changes
           path: categorized_changes.txt
