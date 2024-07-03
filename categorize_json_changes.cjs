@@ -173,14 +173,7 @@ function main() {
 
   // Read old tokens directory from code_diff.txt
   const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
-  const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
-
-  if (!oldTokensDirMatch) {
-    console.error(`old_tokens_dir not found in code_diff.txt`);
-    process.exit(1);
-  }
-
-  const oldTokensDir = oldTokensDirMatch[1];
+  const oldTokensDir = 'old_tokens';
   console.log(`Reading old tokens from: ${oldTokensDir}`);
 
   if (!fs.existsSync(oldTokensDir)) {

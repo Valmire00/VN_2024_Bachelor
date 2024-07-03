@@ -10,9 +10,11 @@ on:
 permissions:
   contents: write
 
+
 jobs:
   lint-build-check:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -43,32 +45,31 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Generate code diff
-        run: git show --first-parent > code_diff.txt
-
-      - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/*.json code_diff.txt categorized_changes.txt
-
-      - name: Check for changes
-        id: git-status
+      - name: Commit and push changes
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .
-          if ! git diff-index --quiet HEAD; then
-            echo "has_changes=true" >> $GITHUB_ENV
-          fi
-
-      - name: Commit and push changes
-        if: env.has_changes == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
           git commit -m 'Apply Stylelint fixes'
-          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
+          git push
 
-      - name: Upload CSS artifacts
+      - name: Generate code diff
+        run: git diff HEAD~1 HEAD > code_diff.txt
+
+      - name: Extract old tokens
+        run: |
+          mkdir old_tokens
+          git checkout HEAD~1 -- tokens/
+          cp -r tokens/* old_tokens/
+
+      - name: Categorize JSON changes
+        run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
+
+      - name: Upload categorized changes
         uses: actions/upload-artifact@v2
         with:
-          name: css-artifacts
-          path: dist/theme/design.token.css
+          name: categorized-changes
+          path: categorized_changes.txt
