@@ -140,12 +140,15 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
     }
   });
 
+  console.log('New Tokens:', newTokens);
+  console.log('Old Tokens:', oldTokens);
+
   // Compare tokens
   for (const [key, value] of Object.entries(newTokens)) {
     if (!(key in oldTokens)) {
-      criticalChanges.push(`Added: ${key} with value ${JSON.stringify(value)}`);
-    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(value)) {
-      simpleChanges.push(`Modified: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(value)}`);
+      criticalChanges.push(`Added: ${key} with value ${value}`);
+    } else if (oldTokens[key] !== value) {
+      simpleChanges.push(`Modified: ${key} from ${oldTokens[key]} to ${value}`);
     }
   }
 
@@ -153,7 +156,7 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
     if (!(key in newTokens)) {
       criticalChanges.push(`Removed: ${key}`);
     }
-  }
+  };
 
   return { simpleChanges, criticalChanges };
 }
