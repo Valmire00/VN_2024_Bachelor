@@ -47,7 +47,7 @@ jobs:
         run: git show --first-parent > code_diff.txt
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens code_diff.txt categorized_changes.txt
+        run: node categorize_json_changes.cjs /tokens/*.json code_diff.txt categorized_changes.txt
 
       - name: Check for changes
         id: git-status
