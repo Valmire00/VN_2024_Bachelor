@@ -1,10 +1,10 @@
 {
   "properties": {
     "theme-variables-vuestic-light-accent-va-primary": {
-      "value": "#154ec1"
+      "value": "#154ec3"
     },
     "theme-variables-vuestic-light-accent-va-secondary": {
-      "value": "#767c88"
+      "value": "#767c78"
     },
     "theme-variables-vuestic-light-accent-va-success": {
       "value": "#3d9209"
@@ -91,7 +91,7 @@
       "value": "1px"
     },
     "theme-variables-vuestic-light-border-va-element-border-width": {
-      "value": "1px"
+      "value": "8px"
     },
     "theme-variables-vuestic-light-border-va-full-border-radius": {
       "value": "999px"
