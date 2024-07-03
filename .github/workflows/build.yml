@@ -1,4 +1,4 @@
-name: Lint, Build, and Check CSS
+name: Lint, Build, and Check JSON Tokens
 
 on:
   pull_request:
@@ -9,7 +9,6 @@ on:
 
 permissions:
   contents: write
-
 
 jobs:
   lint-build-check:
