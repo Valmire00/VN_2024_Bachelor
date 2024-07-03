@@ -1,8 +1,5 @@
 {
   "properties": {
-    "theme-variables-vuestic-light-accent-va-primary": {
-      "value": "#154ec1"
-    },
     "theme-variables-vuestic-light-accent-va-secondary": {
       "value": "#767c88"
     },
@@ -25,7 +22,7 @@
       "value": "#ffffff"
     },
     "theme-variables-vuestic-light-background-va-background-element": {
-      "value": "#ecf0f1"
+      "value": "#ecf0f3"
     },
     "theme-variables-vuestic-light-background-va-background-border": {
       "value": "#dee5f2"
@@ -313,10 +310,10 @@
       "value": "-16px"
     },
     "component-variables-default-avatar-va-avatar-border-radius": {
-      "value": "999px"
+      "value": "9px"
     },
     "component-variables-default-badge-va-badge-dot-size": {
-      "value": "8px"
+      "value": "9px"
     },
     "component-variables-default-badge-va-badge-text-wrapper-border-radius": {
       "value": "2px"
