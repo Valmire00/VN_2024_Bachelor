@@ -153,7 +153,7 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
     if (!(key in newTokens)) {
       criticalChanges.push(`Removed: ${key}`);
     }
-  };
+  }
 
   return { simpleChanges, criticalChanges };
 }
