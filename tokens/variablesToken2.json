@@ -16,7 +16,7 @@
       "value": "#e42222"
     },
     "theme-variables-vuestic-light-background-va-background-primary": {
-      "value": "#fffff"
+      "value": "#ffffff"
     },
     "theme-variables-vuestic-light-background-va-background-secondary": {
       "value": "#ffffff"
@@ -25,7 +25,7 @@
       "value": "#ecf0f1"
     },
     "theme-variables-vuestic-light-background-va-background-border": {
-      "value": "#dee5f2"
+      "value": "#dee5f1"
     },
     "theme-variables-vuestic-light-text-va-text-primary": {
       "value": "#262824"
