@@ -6,26 +6,36 @@ function readJSONFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
-// Helper function to extract tokens from a JSON file
-function extractTokens(jsonContent) {
-  const tokens = {};
-  const properties = jsonContent.properties;
-  for (const [key, value] of Object.entries(properties)) {
-    tokens[key] = value.value;
-  }
-  return tokens;
-}
-
-// Helper function to categorize changes between two sets of tokens
-function categorizeChanges(newTokens, oldTokens) {
+// Helper function to categorize changes between two JSON files
+function categorizeChanges(newTokensDir, oldTokensDir) {
   const simpleChanges = [];
   const criticalChanges = [];
 
+  const newTokens = {};
+  const oldTokens = {};
+
+  // Read new tokens
+  fs.readdirSync(newTokensDir).forEach(file => {
+    if (file.endsWith('.json')) {
+      const data = readJSONFile(path.join(newTokensDir, file));
+      Object.assign(newTokens, data.properties);
+    }
+  });
+
+  // Read old tokens
+  fs.readdirSync(oldTokensDir).forEach(file => {
+    if (file.endsWith('.json')) {
+      const data = readJSONFile(path.join(oldTokensDir, file));
+      Object.assign(oldTokens, data.properties);
+    }
+  });
+
+  // Compare tokens
   for (const [key, value] of Object.entries(newTokens)) {
     if (!(key in oldTokens)) {
-      criticalChanges.push(`Added: ${key} with value ${value}`);
-    } else if (oldTokens[key] !== value) {
-      simpleChanges.push(`Modified: ${key} from ${oldTokens[key]} to ${value}`);
+      criticalChanges.push(`Added: ${key} with value ${JSON.stringify(value)}`);
+    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(value)) {
+      simpleChanges.push(`Modified: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(value)}`);
     }
   }
 
@@ -33,7 +43,7 @@ function categorizeChanges(newTokens, oldTokens) {
     if (!(key in newTokens)) {
       criticalChanges.push(`Removed: ${key}`);
     }
-  }
+  };
 
   return { simpleChanges, criticalChanges };
 }
@@ -68,26 +78,7 @@ function main() {
     process.exit(1);
   }
 
-  const newTokens = {};
-  const oldTokens = {};
-
-  // Read new tokens
-  fs.readdirSync(newTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      const data = readJSONFile(path.join(newTokensDir, file));
-      Object.assign(newTokens, extractTokens(data));
-    }
-  });
-
-  // Read old tokens
-  fs.readdirSync(oldTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      const data = readJSONFile(path.join(oldTokensDir, file));
-      Object.assign(oldTokens, extractTokens(data));
-    }
-  });
-
-  const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens);
+  const { simpleChanges, criticalChanges } = categorizeChanges(newTokensDir, oldTokensDir);
 
   console.log('Writing categorized changes to file...');
   const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
