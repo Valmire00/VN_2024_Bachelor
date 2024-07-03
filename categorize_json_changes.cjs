@@ -33,9 +33,9 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   // Compare tokens
   for (const [key, value] of Object.entries(newTokens)) {
     if (!(key in oldTokens)) {
-      criticalChanges.push(`Added: ${key} with value ${value.value}`);
-    } else if (oldTokens[key].value !== value.value) {
-      simpleChanges.push(`Modified: ${key} from ${oldTokens[key].value} to ${value.value}`);
+      criticalChanges.push(`Added: ${key} with value ${JSON.stringify(value)}`);
+    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(value)) {
+      simpleChanges.push(`Modified: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(value)}`);
     }
   }
 
