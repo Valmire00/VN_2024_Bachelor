@@ -1,12 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-// Helper function to read a JSON file and return its content
 function readJSONFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
-// Helper function to categorize changes between two JSON files
 function categorizeChanges(newTokensDir, oldTokensDir) {
   const simpleChanges = [];
   const criticalChanges = [];
@@ -14,7 +12,6 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   const newTokens = {};
   const oldTokens = {};
 
-  // Read new tokens
   fs.readdirSync(newTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(newTokensDir, file));
@@ -22,7 +19,6 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
     }
   });
 
-  // Read old tokens
   fs.readdirSync(oldTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(oldTokensDir, file));
@@ -30,12 +26,11 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
     }
   });
 
-  // Compare tokens
   for (const [key, value] of Object.entries(newTokens)) {
     if (!(key in oldTokens)) {
-      criticalChanges.push(`Added: ${key} with value ${JSON.stringify(value)}`);
-    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(value)) {
-      simpleChanges.push(`Modified: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(value)}`);
+      criticalChanges.push(`Added: ${key} with value ${value.value}`);
+    } else if (oldTokens[key].value !== value.value) {
+      simpleChanges.push(`Modified: ${key} from ${oldTokens[key].value} to ${value.value}`);
     }
   }
 
@@ -48,7 +43,6 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   return { simpleChanges, criticalChanges };
 }
 
-// Main function
 function main() {
   const newTokensDir = process.argv[2];
   const codeDiffPath = process.argv[3];
@@ -61,7 +55,6 @@ function main() {
     process.exit(1);
   }
 
-  // Read old tokens directory from code_diff.txt
   const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
   const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
 
@@ -85,7 +78,7 @@ function main() {
   fs.writeFileSync(outputPath, output);
 
   console.log('Categorized changes written successfully.');
-  console.log(output); // Print output for debugging
+  console.log(output);
 }
 
 main();
