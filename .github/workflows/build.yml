@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }} # Prüft den PR-Branch aus
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -53,7 +55,7 @@ jobs:
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .
           git commit -m 'Apply Stylelint fixes'
-          git push
+          git push origin HEAD:${{ github.head_ref }}
 
       - name: Generate code diff
         run: git diff HEAD~1 HEAD > code_diff.txt
