@@ -73,7 +73,7 @@ jobs:
           cp -r tokens/* old_tokens/
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
+        run: node categorize_json_changes.cjs tokens/*.json code_diff.txt categorized_changes.txt
 
       - name: Upload categorized changes
         uses: actions/upload-artifact@v2
