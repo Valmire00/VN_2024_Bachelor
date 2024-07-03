@@ -71,3 +71,9 @@ jobs:
         with:
           name: categorized-changes
           path: categorized_changes.txt
+      
+      - name: Upload code diff
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-diff
+          path: code_diff.txt

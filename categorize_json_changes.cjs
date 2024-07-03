@@ -108,7 +108,6 @@ function main() {
 main();
 */
 
-
 const fs = require('fs');
 const path = require('path');
 
@@ -129,7 +128,7 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   fs.readdirSync(newTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(newTokensDir, file));
-      Object.assign(newTokens, data.properties); // Adjusted to read the properties correctly
+      Object.assign(newTokens, data.properties); // Read the properties correctly
     }
   });
 
@@ -137,16 +136,16 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   fs.readdirSync(oldTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(oldTokensDir, file));
-      Object.assign(oldTokens, data.properties); // Adjusted to read the properties correctly
+      Object.assign(oldTokens, data.properties); // Read the properties correctly
     }
   });
 
   // Compare tokens
   for (const [key, value] of Object.entries(newTokens)) {
     if (!(key in oldTokens)) {
-      criticalChanges.push(`Added: ${key} with value ${value.value}`);
-    } else if (oldTokens[key].value !== value.value) {
-      simpleChanges.push(`Modified: ${key} from ${oldTokens[key].value} to ${value.value}`);
+      criticalChanges.push(`Added: ${key} with value ${JSON.stringify(value)}`);
+    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(value)) {
+      simpleChanges.push(`Modified: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(value)}`);
     }
   }
 
@@ -200,4 +199,3 @@ function main() {
 }
 
 main();
-
