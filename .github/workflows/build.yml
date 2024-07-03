@@ -1,6 +1,10 @@
-name: Lint, Build, and Check CSS
+name: Lint, Build, Check, and Categorize JSON Changes
 
-on: [push, pull_request]
+on: 
+  pull_request:
+    branches:
+      - ui/general_tokens
+
 permissions:
   contents: write
 
@@ -38,9 +42,6 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Generate code diff
-        run: git diff HEAD~1 HEAD > code_diff.txt || echo "No previous commit."
-
       - name: Check for changes
         id: git-status
         run: |
@@ -57,21 +58,22 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git commit -m 'Apply Stylelint fixes'
-          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:main
+          git push https://${{ secrets.GH_TOKEN }}@github.com/Valmire-Nivokazi/Thesis_FR_SS2024.git HEAD:ui/general_tokens
+
+      - name: Generate code diff
+        run: git diff HEAD~1 HEAD > code_diff.txt
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens old_tokens categorized_changes.txt
+        run: node categorize_json_changes.cjs tokens code_diff.txt categorized_changes.txt
 
-      - name: Upload CSS artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: css-artifacts
-          path: dist/theme/design.token.css
+          name: code_diff
+          path: code_diff.txt
 
-      - name: Upload diff and categorized changes
+      - name: Upload categorized changes
         uses: actions/upload-artifact@v2
         with:
-          name: diff-and-changes
-          path: |
-            code_diff.txt
-            categorized_changes.txt
+          name: categorized_changes
+          path: categorized_changes.txt
