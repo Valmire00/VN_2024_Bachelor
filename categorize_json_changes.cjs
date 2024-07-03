@@ -143,15 +143,15 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   // Compare tokens
   for (const [key, value] of Object.entries(newTokens)) {
     if (!(key in oldTokens)) {
-      criticalChanges.push(`Added: ${key} with value ${value}`);
-    } else if (oldTokens[key] !== value) {
-      simpleChanges.push(`Modified: ${key} from ${oldTokens[key]} to ${value}`);
+      criticalChanges.push(`Added: ${key} with value ${JSON.stringify(value)}`);
+    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(value)) {
+      simpleChanges.push(`Modified: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(value)}`);
     }
   }
 
   for (const key in oldTokens) {
     if (!(key in newTokens)) {
-      criticalChanges.push(`Removed: ${key}`);
+      criticalChanges.push(`Removed: ${key} with value ${JSON.stringify(oldTokens[key])}`);
     }
   }
 
@@ -173,7 +173,14 @@ function main() {
 
   // Read old tokens directory from code_diff.txt
   const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
-  const oldTokensDir = 'old_tokens';
+  const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
+
+  if (!oldTokensDirMatch) {
+    console.error(`old_tokens_dir not found in code_diff.txt`);
+    process.exit(1);
+  }
+
+  const oldTokensDir = oldTokensDirMatch[1];
   console.log(`Reading old tokens from: ${oldTokensDir}`);
 
   if (!fs.existsSync(oldTokensDir)) {
