@@ -1,11 +1,9 @@
 /**
  * Do not edit directly
- * Generated on Wed, 03 Jul 2024 16:05:09 GMT
+ * Generated on Wed, 03 Jul 2024 16:06:46 GMT
  */
 
 :root {
-  --properties-theme-variables-vuestic-light-accent-va-primary: #154ec1;
-  --properties-theme-variables-vuestic-light-accent-va-secondary: #767c88;
   --properties-theme-variables-vuestic-light-accent-va-success: #3d9209;
   --properties-theme-variables-vuestic-light-accent-va-info: #158de3;
   --properties-theme-variables-vuestic-light-accent-va-danger: #e42222;
@@ -32,7 +30,7 @@
   --properties-theme-variables-vuestic-light-sizes-size-medium: 48px;
   --properties-theme-variables-vuestic-light-sizes-size-large: 64px;
   --properties-theme-variables-vuestic-light-border-va-square-border-radius: 4px;
-  --properties-theme-variables-vuestic-light-border-va-block-border-radius: 6px;
+  --properties-theme-variables-vuestic-light-border-va-block-border-radius: 100px;
   --properties-theme-variables-vuestic-light-border-va-form-border-radius: 4px;
   --properties-theme-variables-vuestic-light-border-va-form-border-width: 1px;
   --properties-theme-variables-vuestic-light-border-va-element-border-width: 1px;
