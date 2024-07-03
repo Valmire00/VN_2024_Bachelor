@@ -5,7 +5,12 @@ on:
     branches:
       - main
     paths:
-      - 'tokens/**'
+      - 'tokens/**'  # Pfad anpassen, falls nötig
+  push:
+    branches:
+      - ui/tokens
+    paths:
+      - 'tokens/**'  # Pfad anpassen, falls nötig
 
 permissions:
   contents: write
