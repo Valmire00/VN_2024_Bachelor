@@ -147,13 +147,13 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
     } else if (oldTokens[key] !== value) {
       simpleChanges.push(`Modified: ${key} from ${oldTokens[key]} to ${value}`);
     }
-  };
+  }
 
   for (const key in oldTokens) {
     if (!(key in newTokens)) {
       criticalChanges.push(`Removed: ${key}`);
     }
-  }
+  };
 
   return { simpleChanges, criticalChanges };
 }
