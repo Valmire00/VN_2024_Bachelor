@@ -110,6 +110,7 @@ main();
 
 // categorize_json_changes.cjs
 const fs = require('fs');
+const path = require('path');
 
 // Helper function to read a JSON file and return its content as an object
 function readJSONFile(filePath) {
@@ -142,31 +143,46 @@ function categorizeChanges(newJSON, oldJSON) {
 
 // Main function
 function main() {
-  const newJSONPath = process.argv[2];
-  const oldJSONPath = process.argv[3];
+  const newTokensDir = process.argv[2];
+  const oldTokensDir = process.argv[3];
   const outputPath = process.argv[4];
 
-  console.log(`Reading new JSON file from: ${newJSONPath}`);
-  console.log(`Reading old JSON file from: ${oldJSONPath}`);
+  const newTokenFiles = fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json'));
+  const oldTokenFiles = fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json'));
 
-  if (!fs.existsSync(newJSONPath)) {
-    console.error(`File not found: ${newJSONPath}`);
-    process.exit(1);
-  }
+  let allSimpleChanges = [];
+  let allCriticalChanges = [];
 
-  if (!fs.existsSync(oldJSONPath)) {
-    console.error(`File not found: ${oldJSONPath}`);
-    process.exit(1);
-  }
+  newTokenFiles.forEach(newFile => {
+    const oldFile = oldTokenFiles.find(file => file === newFile);
+    if (oldFile) {
+      console.log(`Comparing ${newFile}...`);
+      const newJSON = readJSONFile(path.join(newTokensDir, newFile));
+      const oldJSON = readJSONFile(path.join(oldTokensDir, oldFile));
+      const { simpleChanges, criticalChanges } = categorizeChanges(newJSON, oldJSON);
+      allSimpleChanges = allSimpleChanges.concat(simpleChanges);
+      allCriticalChanges = allCriticalChanges.concat(criticalChanges);
+    } else {
+      console.log(`New token file added: ${newFile}`);
+      const newJSON = readJSONFile(path.join(newTokensDir, newFile));
+      for (const key in newJSON) {
+        allCriticalChanges.push(`Added token: ${key}`);
+      }
+    }
+  });
 
-  const newJSON = readJSONFile(newJSONPath);
-  const oldJSON = readJSONFile(oldJSONPath);
-
-  console.log('Comparing JSON files...');
-  const { simpleChanges, criticalChanges } = categorizeChanges(newJSON, oldJSON);
+  oldTokenFiles.forEach(oldFile => {
+    if (!newTokenFiles.includes(oldFile)) {
+      console.log(`Token file removed: ${oldFile}`);
+      const oldJSON = readJSONFile(path.join(oldTokensDir, oldFile));
+      for (const key in oldJSON) {
+        allCriticalChanges.push(`Removed token: ${key}`);
+      }
+    }
+  });
 
   console.log('Writing categorized changes to file...');
-  const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
+  const output = `Simple Changes:\n${allSimpleChanges.join('\n')}\n\nCritical Changes:\n${allCriticalChanges.join('\n')}`;
   fs.writeFileSync(outputPath, output);
 
   console.log('Categorized changes written successfully.');
