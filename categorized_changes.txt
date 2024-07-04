@@ -1,1 +1,8 @@
-No changes to categorize.
+Modified:
+Modified - File: new_tokens.json, Key: property, Changes: {
+  "theme-variables-new-theme-accent-va-informa": [
+    {
+      "value": "#113335"
+    }
+  ]
+}
