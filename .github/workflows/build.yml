@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'tokens/**'  # Pfad anpassen, falls nötig
+      - 'tokens/**'
 
 permissions:
   contents: write
@@ -49,18 +49,17 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          BRANCH_NAME=${{ github.head_ref }}
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .
           git commit -m 'Apply Stylelint fixes'
+          BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
 
       - name: Generate code diff
         run: |
           echo "old_tokens_dir: old_tokens" > code_diff.txt
-          git diff HEAD~1 HEAD >> code_diff.txt
 
       - name: Extract old tokens
         run: |
