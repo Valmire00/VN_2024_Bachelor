@@ -16,7 +16,7 @@
       "value": "rgba(0, 0, 0, 0.1200)"
     },
     "theme-variables-vuestic-light-utility-va-focus": {
-      "value": "#49a2ff"
+      "value": "#49aff"
     },
     "theme-variables-vuestic-light-utility-va-on-primary": {
       "value": "#ffffff"
@@ -67,7 +67,7 @@
       "value": "4px"
     },
     "theme-variables-vuestic-light-border-va-form-border-width": {
-      "value": "20px"
+      "value": "1px"
     },
     "theme-variables-vuestic-light-border-va-element-border-width": {
       "value": "1px"
