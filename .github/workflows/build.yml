@@ -61,11 +61,14 @@ jobs:
           echo "Listing files in old_tokens directory:"
           ls -la old_tokens/
 
+      - name: Detect JSON changes
+        run: node detect_changes.mjs tokens/ old_tokens/ detected_changes.json
+
       - name: Categorize JSON changes
-        run: node categorize_json_changes.mjs tokens/ old_tokens/ output.txt
+        run: node categorize_changes.mjs detected_changes.json categorized_changes.txt
 
       - name: List output file for debugging
-        run: ls -la output.txt
+        run: ls -la categorized_changes.txt
 
       - name: Copy new tokens to old tokens
         run: |
@@ -76,7 +79,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: categorized-changes
-          path: output.txt
+          path: categorized_changes.txt
           if-no-files-found: warn
 
       - name: Commit and push changes
