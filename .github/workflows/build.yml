@@ -1,7 +1,7 @@
 name: Lint, Build, and Check JSON Tokens
 
 on:
-  push:
+  pull_request:
     branches:
       - main
     paths:
@@ -29,14 +29,6 @@ jobs:
         run: |
           rm -rf node_modules package-lock.json
           npm install
-          npm install deep-diff
-
-      - name: Prepare old tokens
-        run: |
-          mkdir -p old_tokens
-          if [ -d "old_tokens" ]; then
-            cp -r old_tokens/* tokens/previous/
-          fi
 
       - name: Check JSON syntax
         run: |
@@ -60,8 +52,11 @@ jobs:
           git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > changed_files.txt
           echo "::set-output name=files::$(cat changed_files.txt)"
 
+      - name: Print code_diff.txt for debugging
+        run: cat code_diff.txt
+
       - name: Analyze token changes
-        run: node token-diff.cjs
+        run: node token-diff.js
 
       - name: Commit and push changes
         if: success()
@@ -72,13 +67,14 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .
-          git commit -m 'Apply automated fixes and updates'
+          git commit -m 'Apply Stylelint fixes'
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
 
-      - name: Update old tokens directory
+      - name: Cleanup old tokens directory
         run: |
-          rm -rf old_tokens/*
+          rm -rf old_tokens
+          mkdir old_tokens
           cp -r tokens/* old_tokens/
 
       - name: Upload categorized changes
