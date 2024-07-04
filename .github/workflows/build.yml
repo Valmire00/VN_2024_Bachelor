@@ -61,7 +61,7 @@ jobs:
           ls -la old_tokens/
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.js tokens/ old_tokens/ output.txt
+        run: node categorize_json_changes.cjs tokens/ old_tokens/ output.txt
 
       - name: List output file for debugging
         run: ls -la output.txt
