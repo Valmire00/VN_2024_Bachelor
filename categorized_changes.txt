@@ -1,5 +1,5 @@
 
         Added Tokens: 
         Removed Tokens: 
-        Modified Tokens: 
+        Modified Tokens: new_tokens.json: property, variablesToken2.json: properties
     
