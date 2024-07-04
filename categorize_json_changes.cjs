@@ -221,7 +221,7 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   fs.readdirSync(newTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(newTokensDir, file));
-      newTokens[file] = data.properties;
+      newTokens[file] = data.properties || data; // Adjusted to handle different structures
     }
   });
 
@@ -229,7 +229,7 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
   fs.readdirSync(oldTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(oldTokensDir, file));
-      oldTokens[file] = data.properties;
+      oldTokens[file] = data.properties || data; // Adjusted to handle different structures
     }
   });
 
