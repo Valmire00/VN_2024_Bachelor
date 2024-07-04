@@ -1,10 +1,9 @@
 /**
  * Do not edit directly
- * Generated on Wed, 03 Jul 2024 16:20:06 GMT
+ * Generated on Thu, 04 Jul 2024 08:47:29 GMT
  */
 
 :root {
-  --properties-theme-variables-vuestic-light-accent-va-primary: #154ec1;
   --properties-theme-variables-vuestic-light-accent-va-secondary: #767c88;
   --properties-theme-variables-vuestic-light-accent-va-success: #3d9219;
   --properties-theme-variables-vuestic-light-accent-va-info: #158de3;
@@ -12,7 +11,7 @@
   --properties-theme-variables-vuestic-light-accent-va-warning: #ffd43a;
   --properties-theme-variables-vuestic-light-background-va-background-primary: #fff;
   --properties-theme-variables-vuestic-light-background-va-background-secondary: #fff;
-  --properties-theme-variables-vuestic-light-background-va-background-element: #ecf0f1;
+  --properties-theme-variables-vuestic-light-background-va-background-element: #ecf0f3;
   --properties-theme-variables-vuestic-light-background-va-background-border: #dee5f2;
   --properties-theme-variables-vuestic-light-text-va-text-primary: #262824;
   --properties-theme-variables-vuestic-light-text-va-text-inverted: #fff;
@@ -108,8 +107,8 @@
   --properties-component-variables-default-alert-va-alert-padding-y: 12px;
   --properties-component-variables-default-alert-va-alert-border-radius: 4px;
   --properties-component-variables-default-avatar-va-avatar-group-gap: -16px;
-  --properties-component-variables-default-avatar-va-avatar-border-radius: 999px;
-  --properties-component-variables-default-badge-va-badge-dot-size: 8px;
+  --properties-component-variables-default-avatar-va-avatar-border-radius: 9px;
+  --properties-component-variables-default-badge-va-badge-dot-size: 9px;
   --properties-component-variables-default-badge-va-badge-text-wrapper-border-radius: 2px;
   --properties-component-variables-default-button-small-va-button-sm-size: 24px;
   --properties-component-variables-default-button-small-va-button-sm-content-py: 4px;
