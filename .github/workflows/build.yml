@@ -58,7 +58,9 @@ jobs:
           git push origin HEAD:$BRANCH_NAME
 
       - name: Generate code diff
-        run: git diff HEAD~1 HEAD > code_diff.txt
+        run: |
+          echo "old_tokens_dir: old_tokens" > code_diff.txt
+          git diff HEAD~1 HEAD >> code_diff.txt
 
       - name: Extract old tokens
         run: |
