@@ -12,9 +12,6 @@
     "theme-variables-vuestic-light-text-va-text-primary": {
       "value": "#262824"
     },
-    "theme-variables-vuestic-light-text-va-text-inverted": {
-      "value": "#ffffff"
-    },
     "theme-variables-vuestic-light-utility-va-shadow": {
       "value": "rgba(0, 0, 0, 0.1200)"
     },
@@ -31,7 +28,7 @@
       "value": "rgba(255, 197, 39, 0.3100)"
     },
     "theme-variables-vuestic-light-typography-va-link-color": {
-      "value": "#154ec1"
+      "value": "#154ec6"
     },
     "theme-variables-vuestic-light-typography-va-link-color-secondary": {
       "value": "#767c88"
