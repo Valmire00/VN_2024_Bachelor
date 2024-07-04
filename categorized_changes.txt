@@ -1,8 +1,10 @@
 Modified:
-File: new_tokens.json, Key: property, Changes: {
-  "theme-variables-new-theme-accent-va-info": [
+File: variablesToken2.json, Key: properties, Changes: {
+  "interaction-variables-va_counter_number": [
     {
-      "value": "#10aabc"
-    }
+      "value": "1px"
+    },
+    0,
+    0
   ]
 }

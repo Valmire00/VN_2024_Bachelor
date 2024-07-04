@@ -1,12 +1,14 @@
 [
   {
-    "file": "new_tokens.json",
+    "file": "variablesToken2.json",
     "delta": {
-      "property": {
-        "theme-variables-new-theme-accent-va-info": [
+      "properties": {
+        "interaction-variables-va_counter_number": [
           {
-            "value": "#10aabc"
-          }
+            "value": "1px"
+          },
+          0,
+          0
         ]
       }
     }
