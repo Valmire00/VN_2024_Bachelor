@@ -1,17 +1,14 @@
 /**
  * Do not edit directly
- * Generated on Thu, 04 Jul 2024 14:55:23 GMT
+ * Generated on Thu, 04 Jul 2024 14:57:17 GMT
  */
 
 :root {
   --property-theme-variables-new-theme-accent-va-primary: #123;
   --property-theme-variables-new-theme-accent-va-secondary: #458;
-  --property-theme-variables-new-theme-accent-va-success: #789;
-  --property-theme-variables-new-theme-accent-va-info: #10aabc;
+  --property-theme-variables-new-theme-accent-va-success: #778810;
   --properties-theme-variables-vuestic-light-background-va-background-secondary: #fff;
   --properties-theme-variables-vuestic-light-background-va-background-element: #ecf0f1;
-  --properties-theme-variables-vuestic-light-background-va-background-border: #dee5f2;
-  --properties-theme-variables-vuestic-light-text-va-text-primary: #262824;
   --properties-theme-variables-vuestic-light-text-va-text-inverted: #fff;
   --properties-theme-variables-vuestic-light-utility-va-shadow: rgba(0, 0, 0, 0.12);
   --properties-theme-variables-vuestic-light-utility-va-focus: #49a8ff;
@@ -58,7 +55,7 @@
   --properties-theme-variables-vuestic-dark-typography-va-link-color-visited: #1347ae;
   --properties-theme-variables-vuestic-dark-typography-va-muted: #7f828b;
   --properties-theme-variables-vuestic-dark-typography-va-font-family: source sans pro;
-  --properties-theme-variables-vuestic-dark-sizes-size-small: 32px;
+  --properties-theme-variables-vuestic-dark-sizes-size-small: 50px;
   --properties-theme-variables-vuestic-dark-sizes-size-medium: 48px;
   --properties-theme-variables-vuestic-dark-sizes-size-large: 64px;
   --properties-theme-variables-vuestic-dark-border-va-square-border-radius: 4px;
