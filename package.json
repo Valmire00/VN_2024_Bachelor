@@ -18,7 +18,8 @@
     "lodash": "^4.17.21",
     "style-dictionary": "3.9.0",
     "stylelint": "^13.13.1",
-    "stylelint-config-standard": "^22.0.0"
+    "stylelint-config-standard": "^22.0.0",
+    "url": "^0.11.3"
   },
   "devDependencies": {
     "ajv": "^8.16.0"
