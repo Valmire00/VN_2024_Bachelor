@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Fetch all history to ensure we can rebase
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -55,7 +55,7 @@ jobs:
         run: cat code_diff.txt
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ old_tokens/ categorized_changes.txt
+        run: node categorize_json_changes.cjs tokens/ old_tokens categorized_changes.txt
 
       - name: Commit and push changes
         if: success()
@@ -74,7 +74,6 @@ jobs:
         run: |
           rm -rf old_tokens
           mkdir old_tokens
-          git checkout HEAD~1 -- tokens/
           cp -r tokens/* old_tokens/
 
       - name: Upload categorized changes
