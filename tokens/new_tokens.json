@@ -6,8 +6,11 @@
     "theme-variables-new-theme-accent-va-secondary": {
       "value": "#445566"
     },
+    "theme-variables-new-theme-accent-va-success": {
+      "value": "#778899"
+    },
     "theme-variables-new-theme-accent-va-info": {
-      "value": "#99aabb"
+      "value": "#99aabc"
     }
   }
 }
