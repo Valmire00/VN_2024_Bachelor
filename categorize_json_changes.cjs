@@ -256,17 +256,28 @@ function main() {
   const outputPath = args[2];
   const changedFilesPath = args[3];
 
-  const changedFiles = readChangedFilesList(changedFilesPath).filter(file => file.endsWith('.json'));
+  const changedFiles = readChangedFilesList(changedFilesPath);
+  console.log('Changed Files:', changedFiles); // Debug output
 
   const newTokens = {}, oldTokens = {};
   changedFiles.forEach(file => {
     const newFilePath = path.join(newTokensDir, file);
     const oldFilePath = path.join(oldTokensDir, file);
-    if (fs.existsSync(newFilePath)) newTokens[file] = readJSONFile(newFilePath);
-    if (fs.existsSync(oldFilePath)) oldTokens[file] = readJSONFile(oldFilePath);
+    if (fs.existsSync(newFilePath)) {
+      newTokens[file] = readJSONFile(newFilePath);
+    }
+    if (fs.existsSync(oldFilePath)) {
+      oldTokens[file] = readJSONFile(oldFilePath);
+    }
   });
 
+  console.log('New Tokens:', newTokens); // Debug output
+  console.log('Old Tokens:', oldTokens); // Debug output
+
   const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens, changedFiles);
+
+  console.log('Simple Changes:', simpleChanges); // Debug output
+  console.log('Critical Changes:', criticalChanges); // Debug output
 
   const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
   fs.writeFileSync(outputPath, output);
