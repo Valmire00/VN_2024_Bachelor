@@ -12,8 +12,11 @@
     "theme-variables-vuestic-light-text-va-text-primary": {
       "value": "#262824"
     },
+    "theme-variables-vuestic-light-utility-va-shadow": {
+      "value": "rgba(0, 0, 0, 0.1200)"
+    },
     "theme-variables-vuestic-light-utility-va-focus": {
-      "value": "#49a8ff"
+      "value": "#49a2ff"
     },
     "theme-variables-vuestic-light-utility-va-on-primary": {
       "value": "#ffffff"
@@ -64,7 +67,7 @@
       "value": "4px"
     },
     "theme-variables-vuestic-light-border-va-form-border-width": {
-      "value": "1px"
+      "value": "20px"
     },
     "theme-variables-vuestic-light-border-va-element-border-width": {
       "value": "1px"
