@@ -217,6 +217,11 @@ function readJSONFile(filePath) {
   }
 }
 
+// Helferfunktion zum konsistenten Stringifizieren von Objekten
+function stringify(obj) {
+  return JSON.stringify(obj, Object.keys(obj).sort());
+}
+
 function main() {
   const newTokensDir = process.argv[2];
   const oldTokensDir = process.argv[3];
@@ -239,8 +244,8 @@ function main() {
     Object.keys(newContent).forEach(key => {
       if (!oldContent.hasOwnProperty(key)) {
         changes.push(`Added: ${key} in ${file}`);
-      } else if (JSON.stringify(newContent[key]) !== JSON.stringify(oldContent[key])) {
-        changes.push(`Modified: ${key} in ${file} from ${JSON.stringify(oldContent[key])} to ${JSON.stringify(newContent[key])}`);
+      } else if (stringify(newContent[key]) !== stringify(oldContent[key])) {
+        changes.push(`Modified: ${key} in ${file} from ${stringify(oldContent[key])} to ${stringify(newContent[key])}`);
       }
     });
 
