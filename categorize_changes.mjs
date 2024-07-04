@@ -237,6 +237,7 @@ main();
 */
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -263,18 +264,20 @@ async function main() {
     const { file, delta } = change;
 
     Object.keys(delta).forEach(key => {
-      if (Array.isArray(delta[key]) && delta[key].length === 1 && delta[key][0] !== undefined) {
-        // Added key
-        categorizedChanges.added.push({ file, key, value: delta[key][0] });
-      } else if (Array.isArray(delta[key]) && delta[key].length === 1 && delta[key][0] === undefined) {
-        // Removed key
-        categorizedChanges.removed.push({ file, key });
-      } else if (Array.isArray(delta[key]) && delta[key].length === 2) {
-        // Modified key
-        categorizedChanges.modified.push({ file, key, oldValue: delta[key][0], newValue: delta[key][1] });
-      } else {
-        // Modified key (detailed changes)
-        categorizedChanges.modified.push({ file, key, changes: delta[key] });
+      const changeType = detectChangeType(delta[key]);
+      switch (changeType) {
+        case 'added':
+          categorizedChanges.added.push({ file, key, value: delta[key][0] });
+          break;
+        case 'removed':
+          categorizedChanges.removed.push({ file, key });
+          break;
+        case 'modified':
+          categorizedChanges.modified.push({ file, key, oldValue: delta[key][0], newValue: delta[key][1] });
+          break;
+        case 'detailed':
+          categorizedChanges.modified.push({ file, key, changes: delta[key] });
+          break;
       }
     });
   });
@@ -312,6 +315,15 @@ async function main() {
     fs.writeFileSync(outputFilePath, 'No changes to categorize.');
     console.log('No changes to categorize.');
   }
+}
+
+function detectChangeType(delta) {
+  if (Array.isArray(delta)) {
+    if (delta.length === 1 && delta[0] !== undefined) return 'added';
+    if (delta.length === 1 && delta[0] === undefined) return 'removed';
+    if (delta.length === 2) return 'modified';
+  }
+  return 'detailed';
 }
 
 function readJSONFile(filePath) {
