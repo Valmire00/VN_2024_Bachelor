@@ -82,3 +82,7 @@ jobs:
         with:
           name: categorized-changes
           path: categorized_changes.txt
+        
+      - name: Display code_diff.txt for debugging
+        run: cat code_diff.txt
+        
