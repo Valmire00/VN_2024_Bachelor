@@ -206,99 +206,80 @@ const path = require('path');
 
 // Helper function to read a JSON file and return its content
 function readJSONFile(filePath) {
-  try {
     return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  } catch (err) {
-    console.error(`Failed to read or parse JSON file: ${filePath}`, err);
-    return {};
-  }
 }
 
 // Helper function to categorize changes between two JSON files
 function categorizeChanges(newTokensDir, oldTokensDir) {
-  const simpleChanges = [];
-  const criticalChanges = [];
+    const simpleChanges = [];
+    const criticalChanges = [];
 
-  const newTokens = {};
-  const oldTokens = {};
+    // Get a list of all JSON files in the new tokens directory
+    const newFiles = fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json'));
+    const oldFiles = fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json'));
 
-  // Read new tokens
-  fs.readdirSync(newTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      const data = readJSONFile(path.join(newTokensDir, file));
-      newTokens[file] = data.properties || data; // Adjusted to handle different structures
-    }
-  });
+    // Process each new file
+    newFiles.forEach(newFile => {
+        const newFilePath = path.join(newTokensDir, newFile);
+        const newTokens = readJSONFile(newFilePath);
 
-  // Read old tokens
-  fs.readdirSync(oldTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      const data = readJSONFile(path.join(oldTokensDir, file));
-      oldTokens[file] = data.properties || data; // Adjusted to handle different structures
-    }
-  });
+        const oldFilePath = path.join(oldTokensDir, newFile);
+        let oldTokens = {};
+        if (fs.existsSync(oldFilePath)) {
+            oldTokens = readJSONFile(oldFilePath);
+        }
 
-  // Compare tokens
-  for (const file in newTokens) {
-    const newFileTokens = newTokens[file] || {};
-    const oldFileTokens = oldTokens[file] || {};
+        for (const [key, value] of Object.entries(newTokens)) {
+            if (!(key in oldTokens)) {
+                criticalChanges.push(`Added in ${newFile}: ${key} with value ${JSON.stringify(value)}`);
+            } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(value)) {
+                simpleChanges.push(`Modified in ${newFile}: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(value)}`);
+            }
+        }
 
-    for (const key in newFileTokens) {
-      if (!(key in oldFileTokens)) {
-        criticalChanges.push(`Added in ${file}: ${key} with value ${newFileTokens[key].value}`);
-      } else if (oldFileTokens[key].value !== newFileTokens[key].value) {
-        simpleChanges.push(`Modified in ${file}: ${key} from ${oldFileTokens[key].value} to ${newFileTokens[key].value}`);
-      }
-    }
+        for (const key in oldTokens) {
+            if (!(key in newTokens)) {
+                criticalChanges.push(`Removed from ${newFile}: ${key}`);
+            }
+        }
+    });
 
-    for (const key in oldFileTokens) {
-      if (!(key in newFileTokens)) {
-        criticalChanges.push(`Removed in ${file}: ${key}`);
-      }
-    }
-  }
-
-  return { simpleChanges, criticalChanges };
+    return { simpleChanges, criticalChanges };
 }
 
 // Main function
 function main() {
-  const newTokensDir = process.argv[2];
-  const codeDiffPath = process.argv[3];
-  const outputPath = process.argv[4];
+    const newTokensDir = process.argv[2];
+    const codeDiffPath = process.argv[3];
+    const outputPath = process.argv[4];
 
-  console.log(`Reading new tokens from: ${newTokensDir}`);
+    if (!fs.existsSync(newTokensDir)) {
+        console.error(`Directory not found: ${newTokensDir}`);
+        process.exit(1);
+    }
 
-  if (!fs.existsSync(newTokensDir)) {
-    console.error(`Directory not found: ${newTokensDir}`);
-    process.exit(1);
-  }
+    // Read old tokens directory from code_diff.txt
+    const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
+    const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
 
-  // Read old tokens directory from code_diff.txt
-  const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
-  console.log(`Contents of code_diff.txt:\n${codeDiff}`); // Log the contents of code_diff.txt
-  const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
+    if (!oldTokensDirMatch) {
+        console.error(`old_tokens_dir not found in code_diff.txt`);
+        process.exit(1);
+    }
 
-  if (!oldTokensDirMatch) {
-    console.error(`old_tokens_dir not found in code_diff.txt`);
-    process.exit(1);
-  }
+    const oldTokensDir = oldTokensDirMatch[1];
 
-  const oldTokensDir = oldTokensDirMatch[1];
-  console.log(`Reading old tokens from: ${oldTokensDir}`);
+    if (!fs.existsSync(oldTokensDir)) {
+        console.error(`Directory not found: ${oldTokensDir}`);
+        process.exit(1);
+    }
 
-  if (!fs.existsSync(oldTokensDir)) {
-    console.error(`Directory not found: ${oldTokensDir}`);
-    process.exit(1);
-  }
+    const { simpleChanges, criticalChanges } = categorizeChanges(newTokensDir, oldTokensDir);
 
-  const { simpleChanges, criticalChanges } = categorizeChanges(newTokensDir, oldTokensDir);
+    const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
+    fs.writeFileSync(outputPath, output);
 
-  const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
-  fs.writeFileSync(outputPath, output);
-
-  console.log('Categorized changes written successfully.');
-  console.log(output); // Print output for debugging
+    console.log('Categorized changes written successfully.');
 }
 
 main();
