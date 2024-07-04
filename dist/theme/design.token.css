@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Thu, 04 Jul 2024 12:26:36 GMT
+ * Generated on Thu, 04 Jul 2024 12:28:28 GMT
  */
 
 :root {
@@ -11,9 +11,9 @@
   --properties-theme-variables-vuestic-light-accent-va-info: #158de3;
   --properties-theme-variables-vuestic-light-accent-va-danger: #e42222;
   --properties-theme-variables-vuestic-light-accent-va-warning: #ffd43a;
+  --properties-theme-variables-vuestic-light-background-va-background-primary: #fff;
+  --properties-theme-variables-vuestic-light-background-va-background-secondary: #fff;
   --properties-theme-variables-vuestic-light-background-va-background-element: #ecf0f1;
-  --properties-theme-variables-vuestic-light-background-va-background-border: #dee5f2;
-  --properties-theme-variables-vuestic-light-text-va-text-primary: #262824;
   --properties-theme-variables-vuestic-light-text-va-text-inverted: #fff;
   --properties-theme-variables-vuestic-light-utility-va-shadow: rgba(0, 0, 0, 0.12);
   --properties-theme-variables-vuestic-light-utility-va-focus: #49a8ff;

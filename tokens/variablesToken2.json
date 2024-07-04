@@ -18,6 +18,12 @@
     "theme-variables-vuestic-light-background-va-background-element": {
       "value": "#ecf0f1"
     },
+    "theme-variables-vuestic-light-background-va-background-border": {
+      "value": "#dee5f2"
+    },
+    "theme-variables-vuestic-light-text-va-text-primary": {
+      "value": "#262824"
+    },
     "theme-variables-vuestic-light-text-va-text-inverted": {
       "value": "#ffffff"
     },
