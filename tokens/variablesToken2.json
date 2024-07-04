@@ -9,6 +9,12 @@
     "theme-variables-vuestic-light-accent-va-warning": {
       "value": "#ffd43a"
     },
+    "theme-variables-vuestic-light-background-va-background-primary": {
+      "value": "#ffffff"
+    },
+    "theme-variables-vuestic-light-background-va-background-secondary": {
+      "value": "#ffffff"
+    },
     "theme-variables-vuestic-light-background-va-background-element": {
       "value": "#ecf0f1"
     },
