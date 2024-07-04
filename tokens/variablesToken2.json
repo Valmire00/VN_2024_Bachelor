@@ -1,7 +1,7 @@
 {
   "properties": {
     "theme-variables-vuestic-light-accent-va-warning": {
-      "value": "#ffd43c"
+      "value": "#ffd43b"
     },
     "theme-variables-vuestic-light-background-va-background-primary": {
       "value": "#ffffff"
@@ -12,11 +12,14 @@
     "theme-variables-vuestic-light-text-va-text-primary": {
       "value": "#262824"
     },
+    "theme-variables-vuestic-light-text-va-text-inverted": {
+      "value": "#ffffff"
+    },
     "theme-variables-vuestic-light-utility-va-shadow": {
       "value": "rgba(0, 0, 0, 0.1200)"
     },
     "theme-variables-vuestic-light-utility-va-focus": {
-      "value": "#49aff"
+      "value": "#49a8ff"
     },
     "theme-variables-vuestic-light-utility-va-on-primary": {
       "value": "#ffffff"
@@ -28,7 +31,7 @@
       "value": "rgba(255, 197, 39, 0.3100)"
     },
     "theme-variables-vuestic-light-typography-va-link-color": {
-      "value": "#154ec6"
+      "value": "#154ec1"
     },
     "theme-variables-vuestic-light-typography-va-link-color-secondary": {
       "value": "#767c88"
