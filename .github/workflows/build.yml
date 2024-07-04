@@ -55,12 +55,18 @@ jobs:
       - name: Print code_diff.txt for debugging
         run: cat code_diff.txt
 
-      - name: Get changed files
+      - name: Get changed JSON files in tokens directory
         run: |
-          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > changed_files.txt
-      
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} 'tokens/*.json' > changed_files.txt
+            
       - name: Categorize JSON changes
         run: node categorize_json_changes.cjs tokens/ old_tokens categorized_changes.txt changed_files.txt
+
+      - name: List files in tokens directory for debugging
+        run: ls -la tokens/
+
+      - name: Display content of changed_files.txt for debugging
+        run: cat changed_files.txt
 
       - name: Commit and push changes
         if: success()
