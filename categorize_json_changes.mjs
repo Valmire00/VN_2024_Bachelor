@@ -89,12 +89,12 @@ async function main() {
     const delta = jsondiffpatch.diff(oldContent, newContent);
     if (delta) {
       Object.keys(delta).forEach(key => {
-        if (delta[key] === undefined) {
-          // Removed key
-          changes.removed.push({ file, key });
-        } else if (!oldContent.hasOwnProperty(key)) {
+        if (delta[key].length === 1 && delta[key][0] === undefined) {
           // Added key
           changes.added.push({ file, key, value: newContent[key] });
+        } else if (delta[key].length === 1 && delta[key][1] === 0) {
+          // Removed key
+          changes.removed.push({ file, key });
         } else {
           // Modified key
           changes.modified.push({ file, key, oldValue: oldContent[key], newValue: newContent[key] });
