@@ -1,2 +1,1 @@
-tokens/new_tokens.json
-tokens/variablesToken2.json
+categorize_json_changes.cjs
