@@ -1,7 +1,7 @@
 name: Lint, Build, and Check JSON Tokens
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
@@ -66,6 +66,11 @@ jobs:
 
       - name: List output file for debugging
         run: ls -la output.txt
+
+      - name: Copy new tokens to old tokens
+        run: |
+          rm -rf old_tokens/*
+          cp -r tokens/* old_tokens/
 
       - name: Upload categorized changes
         uses: actions/upload-artifact@v2
