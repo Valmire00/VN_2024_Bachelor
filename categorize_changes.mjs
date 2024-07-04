@@ -147,6 +147,7 @@ main();
 */
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -193,7 +194,7 @@ async function main() {
   if (categorizedChanges.added.length > 0) {
     output += 'Added:\n';
     categorizedChanges.added.forEach(change => {
-      output += `File: ${change.file}, Key: ${change.key}, Value: ${JSON.stringify(change.value, null, 2)}\n`;
+      output += `Added - File: ${change.file}, Key: ${change.key}, Value: ${JSON.stringify(change.value, null, 2)}\n`;
     });
   }
 
@@ -201,9 +202,9 @@ async function main() {
     output += 'Modified:\n';
     categorizedChanges.modified.forEach(change => {
       if (change.oldValue !== undefined && change.newValue !== undefined) {
-        output += `File: ${change.file}, Key: ${change.key}, Old Value: ${JSON.stringify(change.oldValue, null, 2)}, New Value: ${JSON.stringify(change.newValue, null, 2)}\n`;
+        output += `Modified - File: ${change.file}, Key: ${change.key}, Old Value: ${JSON.stringify(change.oldValue, null, 2)}, New Value: ${JSON.stringify(change.newValue, null, 2)}\n`;
       } else {
-        output += `File: ${change.file}, Key: ${change.key}, Changes: ${JSON.stringify(change.changes, null, 2)}\n`;
+        output += `Modified - File: ${change.file}, Key: ${change.key}, Changes: ${JSON.stringify(change.changes, null, 2)}\n`;
       }
     });
   }
@@ -211,7 +212,7 @@ async function main() {
   if (categorizedChanges.removed.length > 0) {
     output += 'Removed:\n';
     categorizedChanges.removed.forEach(change => {
-      output += `File: ${change.file}, Key: ${change.key}\n`;
+      output += `Removed - File: ${change.file}, Key: ${change.key}\n`;
     });
   }
 
