@@ -9,15 +9,15 @@
   },
   "dependencies": {
     "@tokens-studio/sd-transforms": "0.11.8",
+    "ajv": "^8.0.0",
+    "deep-diff": "^1.0.2",
     "diff": "^5.2.0",
     "fs": "^0.0.1-security",
+    "jq": "^1.0.0",
     "lodash": "^4.17.21",
     "style-dictionary": "3.9.0",
     "stylelint": "^13.13.1",
-    "stylelint-config-standard": "^22.0.0",
-    "ajv": "^8.0.0",
-    "jq": "^1.0.0",
-    "deep-diff": "^1.0.2"
+    "stylelint-config-standard": "^22.0.0"
   },
   "devDependencies": {
     "ajv": "^8.16.0"

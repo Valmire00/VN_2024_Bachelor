@@ -1,0 +1,52 @@
+[
+  {
+    "kind": "D",
+    "path": [
+      "property",
+      "theme-variables-new-theme-accent-va-primary"
+    ],
+    "lhs": {
+      "value": "#112233"
+    }
+  },
+  {
+    "kind": "E",
+    "path": [
+      "property",
+      "theme-variables-new-theme-accent-va-secondary",
+      "value"
+    ],
+    "lhs": "#445588",
+    "rhs": "#4455"
+  },
+  {
+    "kind": "E",
+    "path": [
+      "property",
+      "theme-variables-new-theme-accent-va-success",
+      "value"
+    ],
+    "lhs": "#778810",
+    "rhs": "#778899"
+  },
+  {
+    "kind": "N",
+    "path": [
+      "property",
+      "theme-variables-new-theme-accent-va-info"
+    ],
+    "rhs": {
+      "value": "#10aabc"
+    }
+  },
+  {
+    "kind": "N",
+    "path": [
+      "property",
+      "theme-variables-new-theme-accent-va-informa"
+    ],
+    "rhs": {
+      "value": "#112233"
+    }
+  }
+]
