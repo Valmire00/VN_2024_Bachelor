@@ -288,84 +288,73 @@ main();
 const fs = require('fs');
 const path = require('path');
 
-const oldTokensDir = './old_tokens';
-const newTokensDir = './tokens';
-const changesFilePath = './categorized_changes.txt';
+const tokensDir = path.join(__dirname, 'tokens');
+const oldTokensDir = path.join(__dirname, 'old_tokens');
+const changesFile = path.join(__dirname, 'categorized_changes.txt');
 
-const categorizeChanges = (oldTokens, newTokens) => {
-  const changes = {
-    simpleChanges: [],
-    criticalChanges: []
-  };
+const categorizeChanges = (oldData, newData) => {
+    const simpleChanges = [];
+    const criticalChanges = [];
 
-  const oldKeys = Object.keys(oldTokens);
-  const newKeys = Object.keys(newTokens);
+    const allKeys = new Set([...Object.keys(oldData), ...Object.keys(newData)]);
 
-  // Detect added or modified tokens
-  newKeys.forEach(key => {
-    if (!oldKeys.includes(key)) {
-      changes.simpleChanges.push(`Added token: ${key}`);
-    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(newTokens[key])) {
-      changes.simpleChanges.push(`Modified token: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(newTokens[key])}`);
-    }
-  });
-
-  // Detect removed tokens
-  oldKeys.forEach(key => {
-    if (!newKeys.includes(key)) {
-      changes.criticalChanges.push(`Removed token: ${key}`);
-    }
-  });
-
-  // Detect duplicate tokens
-  const allKeys = [...oldKeys, ...newKeys];
-  const duplicates = allKeys.filter((key, index) => allKeys.indexOf(key) !== index);
-  duplicates.forEach(key => {
-    changes.criticalChanges.push(`Duplicate token: ${key}`);
-  });
-
-  return changes;
-};
-
-const generateCategorizedChanges = () => {
-  const categorizedChanges = {};
-
-  fs.readdirSync(newTokensDir).forEach(file => {
-    if (path.extname(file) === '.json') {
-      const oldFilePath = path.join(oldTokensDir, file);
-      const newFilePath = path.join(newTokensDir, file);
-
-      if (fs.existsSync(oldFilePath)) {
-        const oldTokens = JSON.parse(fs.readFileSync(oldFilePath, 'utf-8'));
-        const newTokens = JSON.parse(fs.readFileSync(newFilePath, 'utf-8'));
-
-        const changes = categorizeChanges(oldTokens, newTokens);
-
-        if (changes.simpleChanges.length > 0 || changes.criticalChanges.length > 0) {
-          categorizedChanges[file] = changes;
-        } else {
-          categorizedChanges[file] = 'No changes made';
+    allKeys.forEach(key => {
+        if (!oldData.hasOwnProperty(key)) {
+            simpleChanges.push(`Added token: ${key}`);
+        } else if (!newData.hasOwnProperty(key)) {
+            criticalChanges.push(`Deleted token: ${key}`);
+        } else if (JSON.stringify(oldData[key]) !== JSON.stringify(newData[key])) {
+            simpleChanges.push(`Modified token: ${key} from ${JSON.stringify(oldData[key])} to ${JSON.stringify(newData[key])}`);
         }
-      } else {
-        categorizedChanges[file] = 'New file added';
-      }
-    }
-  });
 
-  return categorizedChanges;
+        if (Object.keys(newData).filter(k => k === key).length > 1) {
+            criticalChanges.push(`Duplicate token: ${key}`);
+        }
+    });
+
+    return { simpleChanges, criticalChanges };
 };
 
-const writeChangesToFile = (changes) => {
-  const changesContent = Object.entries(changes).map(([file, changes]) => {
-    if (typeof changes === 'string') {
-      return `Changes in ${file}:\n  - ${changes}\n`;
-    } else {
-      return `Changes in ${file}:\n  - Simple Changes:\n    - ${changes.simpleChanges.join('\n    - ')}\n  - Critical Changes:\n    - ${changes.criticalChanges.join('\n    - ')}\n`;
-    }
-  }).join('\n');
+const processFiles = () => {
+    const files = fs.readdirSync(tokensDir);
+    let report = '';
 
-  fs.writeFileSync(changesFilePath, changesContent, 'utf-8');
+    files.forEach(file => {
+        const filePath = path.join(tokensDir, file);
+        const oldFilePath = path.join(oldTokensDir, file);
+
+        if (!fs.existsSync(oldFilePath)) {
+            fs.copyFileSync(filePath, oldFilePath);
+            return;
+        }
+
+        const oldData = JSON.parse(fs.readFileSync(oldFilePath, 'utf8'));
+        const newData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+        const { simpleChanges, criticalChanges } = categorizeChanges(oldData, newData);
+
+        if (simpleChanges.length === 0 && criticalChanges.length === 0) {
+            report += `Changes in ${file}:\n  - No changes made\n`;
+        } else {
+            report += `Changes in ${file}:\n`;
+            if (simpleChanges.length > 0) {
+                report += '  - Simple Changes:\n';
+                simpleChanges.forEach(change => {
+                    report += `    - ${change}\n`;
+                });
+            }
+            if (criticalChanges.length > 0) {
+                report += '  - Critical Changes:\n';
+                criticalChanges.forEach(change => {
+                    report += `    - ${change}\n`;
+                });
+            }
+        }
+
+        fs.copyFileSync(filePath, oldFilePath);
+    });
+
+    fs.writeFileSync(changesFile, report, 'utf8');
 };
 
-const changes = generateCategorizedChanges();
-writeChangesToFile(changes);
+processFiles();
