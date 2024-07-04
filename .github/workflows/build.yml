@@ -1,7 +1,7 @@
 name: Lint, Build, and Check JSON Tokens
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
@@ -26,9 +26,7 @@ jobs:
           node-version: '16'
 
       - name: Install dependencies
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install
+        run: npm install
 
       - name: Check JSON syntax
         run: |
@@ -44,7 +42,7 @@ jobs:
         run: ls -la dist/theme
 
       - name: Run Stylelint
-        run: npx stylelint 'dist/theme/*.css' --fix
+        run: npx stylelint 'dist/theme/*..css' --fix
 
       - name: Initialize old tokens if not present
         run: |
@@ -54,7 +52,7 @@ jobs:
           fi
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ old_tokens categorized_changes.txt
+        run: node categorize_json_changes.js tokens/ old_tokens/ output.txt
 
       - name: Update old tokens
         run: |
@@ -65,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: categorized-changes
-          path: categorized_changes.txt
+          path: output.txt
 
       - name: Commit and push changes
         if: success()

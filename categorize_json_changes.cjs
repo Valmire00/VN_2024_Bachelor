@@ -207,6 +207,7 @@ main();
 
 const fs = require('fs');
 const path = require('path');
+const _ = require('lodash');  // Importieren von Lodash
 
 function readJSONFile(filePath) {
   try {
@@ -215,11 +216,6 @@ function readJSONFile(filePath) {
     console.error(`Error reading JSON from ${filePath}:`, e);
     return null;
   }
-}
-
-// Helferfunktion zum konsistenten Stringifizieren von Objekten
-function stringify(obj) {
-  return JSON.stringify(obj, Object.keys(obj).sort());
 }
 
 function main() {
@@ -244,8 +240,8 @@ function main() {
     Object.keys(newContent).forEach(key => {
       if (!oldContent.hasOwnProperty(key)) {
         changes.push(`Added: ${key} in ${file}`);
-      } else if (stringify(newContent[key]) !== stringify(oldContent[key])) {
-        changes.push(`Modified: ${key} in ${file} from ${stringify(oldContent[key])} to ${stringify(newContent[key])}`);
+      } else if (!_.isEqual(newContent[key], oldContent[key])) {
+        changes.push(`Modified: ${key} in ${file} from ${JSON.stringify(oldContent[key])} to ${JSON.stringify(newContent[key])}`);
       }
     });
 
