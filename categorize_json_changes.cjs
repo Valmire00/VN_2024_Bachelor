@@ -204,6 +204,7 @@ function main() {
 
 main();
 */
+
 const fs = require('fs');
 const path = require('path');
 
@@ -270,8 +271,18 @@ function main() {
 
   const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens);
 
-  const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
-  fs.writeFileSync(outputPath, output);
+  const output = [];
+  if (simpleChanges.length > 0) {
+    output.push(`Simple Changes:\n${simpleChanges.join('\n')}`);
+  }
+  if (criticalChanges.length > 0) {
+    output.push(`Critical Changes:\n${criticalChanges.join('\n')}`);
+  }
+  if (output.length === 0) {
+    output.push('No changes made.');
+  }
+
+  fs.writeFileSync(outputPath, output.join('\n\n'));
   console.log('Categorized changes written successfully.');
 }
 
