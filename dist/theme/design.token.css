@@ -1,10 +1,11 @@
 /**
  * Do not edit directly
- * Generated on Thu, 04 Jul 2024 09:44:34 GMT
+ * Generated on Thu, 04 Jul 2024 09:46:21 GMT
  */
 
 :root {
-  --properties-theme-variables-vuestic-light-accent-va-secondary: #767c80;
+  --properties-theme-variables-vuestic-light-accent-va-primary: #154ec1;
+  --properties-theme-variables-vuestic-light-accent-va-secondary: #767c88;
   --properties-theme-variables-vuestic-light-accent-va-success: #3d9209;
   --properties-theme-variables-vuestic-light-accent-va-info: #158de3;
   --properties-theme-variables-vuestic-light-accent-va-danger: #e42222;
@@ -53,7 +54,7 @@
   --properties-theme-variables-vuestic-dark-utility-va-on-primary: #262824;
   --properties-theme-variables-vuestic-dark-typography-va-text-selected: #b3d4fc;
   --properties-theme-variables-vuestic-dark-typography-va-text-highlighted: rgba(255, 197, 39, 0.31);
-  --properties-theme-variables-vuestic-dark-typography-va-link-color: #154ec2;
+  --properties-theme-variables-vuestic-dark-typography-va-link-color: #154ec1;
   --properties-theme-variables-vuestic-dark-typography-va-link-color-secondary: #767c88;
   --properties-theme-variables-vuestic-dark-typography-va-link-color-hover: #2364e7;
   --properties-theme-variables-vuestic-dark-typography-va-link-color-active: #5587ec;
