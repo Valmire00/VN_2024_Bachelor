@@ -288,86 +288,84 @@ main();
 const fs = require('fs');
 const path = require('path');
 
-function loadJSON(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-}
+const oldTokensDir = './old_tokens';
+const newTokensDir = './tokens';
+const changesFilePath = './categorized_changes.txt';
 
-function compareJSON(oldData, newData) {
-  const changes = {};
-  const allKeys = new Set([...Object.keys(oldData), ...Object.keys(newData)]);
+const categorizeChanges = (oldTokens, newTokens) => {
+  const changes = {
+    simpleChanges: [],
+    criticalChanges: []
+  };
 
-  allKeys.forEach(key => {
-    if (!oldData.hasOwnProperty(key)) {
-      changes[key] = { old: 'not present', new: newData[key] };
-    } else if (!newData.hasOwnProperty(key)) {
-      changes[key] = { old: oldData[key], new: 'not present' };
-    } else if (JSON.stringify(oldData[key]) !== JSON.stringify(newData[key])) {
-      changes[key] = { old: oldData[key], new: newData[key] };
+  const oldKeys = Object.keys(oldTokens);
+  const newKeys = Object.keys(newTokens);
+
+  // Detect added or modified tokens
+  newKeys.forEach(key => {
+    if (!oldKeys.includes(key)) {
+      changes.simpleChanges.push(`Added token: ${key}`);
+    } else if (JSON.stringify(oldTokens[key]) !== JSON.stringify(newTokens[key])) {
+      changes.simpleChanges.push(`Modified token: ${key} from ${JSON.stringify(oldTokens[key])} to ${JSON.stringify(newTokens[key])}`);
     }
   });
 
+  // Detect removed tokens
+  oldKeys.forEach(key => {
+    if (!newKeys.includes(key)) {
+      changes.criticalChanges.push(`Removed token: ${key}`);
+    }
+  });
+
+  // Detect duplicate tokens
+  const allKeys = [...oldKeys, ...newKeys];
+  const duplicates = allKeys.filter((key, index) => allKeys.indexOf(key) !== index);
+  duplicates.forEach(key => {
+    changes.criticalChanges.push(`Duplicate token: ${key}`);
+  });
+
   return changes;
-}
+};
 
-function formatChanges(fileName, changes) {
-  if (Object.keys(changes).length === 0) {
-    return `file: "${fileName}": no changes made\n`;
-  }
-  
-  let result = `Changes in ${fileName}:\n`;
-  Object.keys(changes).forEach(key => {
-    result += `  - ${key}: from ${JSON.stringify(changes[key].old)} to ${JSON.stringify(changes[key].new)}\n`;
-  });
-  return result;
-}
+const generateCategorizedChanges = () => {
+  const categorizedChanges = {};
 
-function processFiles(newTokensDir, oldTokensDir) {
-  const newFiles = fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json'));
-  const oldFiles = fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json'));
-  const allFiles = new Set([...newFiles, ...oldFiles]);
-  
-  let result = '';
+  fs.readdirSync(newTokensDir).forEach(file => {
+    if (path.extname(file) === '.json') {
+      const oldFilePath = path.join(oldTokensDir, file);
+      const newFilePath = path.join(newTokensDir, file);
 
-  allFiles.forEach(file => {
-    const newFilePath = path.join(newTokensDir, file);
-    const oldFilePath = path.join(oldTokensDir, file);
-    const newFileData = fs.existsSync(newFilePath) ? loadJSON(newFilePath) : {};
-    const oldFileData = fs.existsSync(oldFilePath) ? loadJSON(oldFilePath) : {};
-    const changes = compareJSON(oldFileData, newFileData);
-    result += formatChanges(file, changes);
+      if (fs.existsSync(oldFilePath)) {
+        const oldTokens = JSON.parse(fs.readFileSync(oldFilePath, 'utf-8'));
+        const newTokens = JSON.parse(fs.readFileSync(newFilePath, 'utf-8'));
+
+        const changes = categorizeChanges(oldTokens, newTokens);
+
+        if (changes.simpleChanges.length > 0 || changes.criticalChanges.length > 0) {
+          categorizedChanges[file] = changes;
+        } else {
+          categorizedChanges[file] = 'No changes made';
+        }
+      } else {
+        categorizedChanges[file] = 'New file added';
+      }
+    }
   });
 
-  return result;
-}
+  return categorizedChanges;
+};
 
-const newTokensDir = process.argv[2];
-const codeDiffPath = process.argv[3];
-const outputPath = process.argv[4];
+const writeChangesToFile = (changes) => {
+  const changesContent = Object.entries(changes).map(([file, changes]) => {
+    if (typeof changes === 'string') {
+      return `Changes in ${file}:\n  - ${changes}\n`;
+    } else {
+      return `Changes in ${file}:\n  - Simple Changes:\n    - ${changes.simpleChanges.join('\n    - ')}\n  - Critical Changes:\n    - ${changes.criticalChanges.join('\n    - ')}\n`;
+    }
+  }).join('\n');
 
-if (!fs.existsSync(newTokensDir)) {
-  console.error(`Directory not found: ${newTokensDir}`);
-  process.exit(1);
-}
+  fs.writeFileSync(changesFilePath, changesContent, 'utf-8');
+};
 
-const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
-const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
-
-if (!oldTokensDirMatch) {
-  console.error(`old_tokens_dir not found in code_diff.txt`);
-  process.exit(1);
-}
-
-const oldTokensDir = oldTokensDirMatch[1];
-
-if (!fs.existsSync(oldTokensDir)) {
-  console.error(`Directory not found: ${oldTokensDir}`);
-  process.exit(1);
-}
-
-const categorizedChanges = processFiles(newTokensDir, oldTokensDir);
-
-console.log('Writing categorized changes to file...');
-fs.writeFileSync(outputPath, categorizedChanges);
-
-console.log('Categorized changes written successfully.');
-console.log(categorizedChanges);
+const changes = generateCategorizedChanges();
+writeChangesToFile(changes);
