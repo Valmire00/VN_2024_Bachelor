@@ -29,14 +29,12 @@ jobs:
         run: |
           rm -rf node_modules package-lock.json
           npm install
-
       - name: Check JSON syntax
         run: |
           for file in tokens/*.json; do
             echo "Checking $file"
             cat "$file" | jq empty
           done
-
       - name: Build CSS from JSON tokens
         run: node build.mjs
 
@@ -58,6 +56,8 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
+      - name: Generate code diff
+        run: echo "old_tokens_dir: old_tokens" > code_diff.txt
 
       - name: Extract old tokens
         run: |
