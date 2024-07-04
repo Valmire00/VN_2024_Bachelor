@@ -56,7 +56,7 @@ jobs:
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .
           git commit -m 'Apply Stylelint fixes'
-          git pull origin $BRANCH_NAME --rebase
+          git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
       - name: Generate code diff
         run: |
@@ -69,6 +69,12 @@ jobs:
           cp -r tokens/* old_tokens/
       - name: Categorize JSON changes
         run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
+
+      - name: Upload code diff
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-diff
+          path: code_diff.txt
 
       - name: Upload categorized changes
         uses: actions/upload-artifact@v2
