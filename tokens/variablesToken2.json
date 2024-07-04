@@ -1,7 +1,10 @@
 {
   "properties": {
+    "theme-variables-vuestic-light-accent-va-primary": {
+      "value": "#154ec1"
+    },
     "theme-variables-vuestic-light-accent-va-secondary": {
-      "value": "#767c80"
+      "value": "#767c88"
     },
     "theme-variables-vuestic-light-accent-va-success": {
       "value": "#3d9209"
@@ -148,7 +151,7 @@
       "value": "rgba(255, 197, 39, 0.3100)"
     },
     "theme-variables-vuestic-dark-typography-va-link-color": {
-      "value": "#154ec2"
+      "value": "#154ec1"
     },
     "theme-variables-vuestic-dark-typography-va-link-color-secondary": {
       "value": "#767c88"
