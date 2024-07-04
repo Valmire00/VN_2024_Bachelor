@@ -1,16 +1,13 @@
 { 
   "property": {
     "theme-variables-new-theme-accent-va-secondary": {
-      "value": "#4463"
+      "value": "#4465"
     },
     "theme-variables-new-theme-accent-va-success": {
-      "value": "#778899"
+      "value": "#778399"
     },
     "theme-variables-new-theme-accent-va-info": {
       "value": "#10aabc"
-    },
-    "theme-variables-new-theme-accent-va-informa": {
-      "value": "#113335"
     }
   }
 }
