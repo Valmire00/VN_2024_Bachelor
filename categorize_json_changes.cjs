@@ -418,7 +418,7 @@ let categorizedChanges = '';
 newFiles.forEach(file => {
   const prevTokens = prevFiles.includes(file) ? JSON.parse(fs.readFileSync(path.join(prevDir, file))) : {};
   const newTokens = JSON.parse(fs.readFileSync(path.join(newDir, file)));
-  
+
   const changes = categorizeChanges(prevTokens, newTokens);
 
   if (changes.simpleChanges.length > 0 || changes.criticalChanges.length > 0) {
