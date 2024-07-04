@@ -1,8 +1,5 @@
 {
   "properties": {
-    "theme-variables-vuestic-light-accent-va-primary": {
-      "value": "#154ec1"
-    },
     "theme-variables-vuestic-light-accent-va-secondary": {
       "value": "#767c88"
     },
@@ -24,11 +21,8 @@
     "theme-variables-vuestic-light-background-va-background-secondary": {
       "value": "#ffffff"
     },
-    "theme-variables-vuestic-light-background-va-background-element": {
-      "value": "#ecf0f1"
-    },
     "theme-variables-vuestic-light-background-va-background-border": {
-      "value": "#dee5f2"
+      "value": "#def5f2"
     },
     "theme-variables-vuestic-light-text-va-text-primary": {
       "value": "#262824"
