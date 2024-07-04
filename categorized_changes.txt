@@ -2,6 +2,3 @@ Simple Changes:
 
 
 Critical Changes:
-Added: theme-variables-vuestic-light-accent-va-primary with value #154ec1
-Added: theme-variables-vuestic-light-accent-va-secondary with value #767c88
-Added: theme-variables-vuestic-light-accent-va-success with value #3d9209
