@@ -247,41 +247,32 @@ function main() {
     process.exit(1);
   }
 
-  const newTokens = {};
-  const oldTokens = {};
+  const categorizedChanges = [];
 
   fs.readdirSync(newTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      newTokens[file] = readJSONFile(path.join(newTokensDir, file));
-    }
-  });
+    if (file.endsWith('.json') && fs.existsSync(path.join(oldTokensDir, file))) {
+      const newTokens = readJSONFile(path.join(newTokensDir, file));
+      const oldTokens = readJSONFile(path.join(oldTokensDir, file));
 
-  fs.readdirSync(oldTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      oldTokens[file] = readJSONFile(path.join(oldTokensDir, file));
-    }
-  });
+      const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens);
 
-  const allChanges = [];
-
-  for (const file of Object.keys(newTokens)) {
-    if (oldTokens[file]) {
-      const { simpleChanges, criticalChanges } = categorizeChanges(newTokens[file], oldTokens[file]);
       if (simpleChanges.length > 0 || criticalChanges.length > 0) {
-        allChanges.push({
-          file,
-          simpleChanges,
-          criticalChanges,
-        });
+        categorizedChanges.push(`File: ${file}`);
+        if (simpleChanges.length > 0) {
+          categorizedChanges.push('Simple Changes:');
+          categorizedChanges.push(...simpleChanges);
+        }
+        if (criticalChanges.length > 0) {
+          categorizedChanges.push('Critical Changes:');
+          categorizedChanges.push(...criticalChanges);
+        }
+      } else {
+        categorizedChanges.push(`File: ${file} - No changes detected.`);
       }
     }
-  }
+  });
 
-  const output = allChanges.map(change => {
-    return `File: ${change.file}\nSimple Changes:\n${change.simpleChanges.join('\n')}\n\nCritical Changes:\n${change.criticalChanges.join('\n')}`;
-  }).join('\n\n');
-
-  fs.writeFileSync(outputPath, output);
+  fs.writeFileSync(outputPath, categorizedChanges.join('\n'));
   console.log('Categorized changes written successfully.');
 }
 
