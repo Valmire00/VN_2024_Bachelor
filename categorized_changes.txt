@@ -1,5 +1,6 @@
 Simple Changes:
-Modified in new_tokens.json: property from undefined to undefined
-Modified in variablesToken2.json: properties from undefined to undefined
+Modified in variablesToken2.json: theme-variables-vuestic-light-accent-va-warning from #ffd43a to #ecf0f1
 
 Critical Changes:
+Removed in variablesToken2.json: theme-variables-vuestic-light-accent-va-info
+Removed in variablesToken2.json: theme-variables-vuestic-light-accent-va-danger
