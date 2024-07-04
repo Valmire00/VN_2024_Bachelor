@@ -12,16 +12,10 @@
     "theme-variables-vuestic-light-text-va-text-primary": {
       "value": "#262824"
     },
-    "theme-variables-vuestic-light-utility-va-shadow": {
-      "value": "rgba(0, 0, 0, 0.1200)"
-    },
     "theme-variables-vuestic-light-utility-va-focus": {
       "value": "#49a8ff"
     },
-    "theme-variables-vuestic-light-utility-va-on-primary": {
-      "value": "#ffffff"
-    },
-    "theme-variables-vuestic-light-typography-va-text-selected": {
+     "theme-variables-vuestic-light-typography-va-text-selected": {
       "value": "#b3d4fc"
     },
     "theme-variables-vuestic-light-typography-va-text-highlighted": {
