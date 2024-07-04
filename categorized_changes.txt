@@ -1,13 +1,10 @@
 Modified:
-File: variablesToken2.json, Key: properties, Changes: {
-  "component-variables-soild-time-picker-va-time-picker-column-border-right": [
+File: new_tokens.json, Key: property, Changes: {
+  "theme-variables-new-theme-accent-va-info": [
     {
-      "value": "#ffffff"
-    }
-  ],
-  "interaction-variables-va_counter_number": [
-    {
-      "value": "1px"
-    }
+      "value": "#10aabc"
+    },
+    0,
+    0
   ]
 }

@@ -1,17 +1,14 @@
 [
   {
-    "file": "variablesToken2.json",
+    "file": "new_tokens.json",
     "delta": {
-      "properties": {
-        "component-variables-soild-time-picker-va-time-picker-column-border-right": [
+      "property": {
+        "theme-variables-new-theme-accent-va-info": [
           {
-            "value": "#ffffff"
-          }
-        ],
-        "interaction-variables-va_counter_number": [
-          {
-            "value": "1px"
-          }
+            "value": "#10aabc"
+          },
+          0,
+          0
         ]
       }
     }
