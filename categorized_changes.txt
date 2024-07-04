@@ -1,7 +1,4 @@
 Simple Changes:
-Modified: theme-variables-vuestic-light-background-va-background-element from #ecf0f1 to #ecf0f2
+
 
 Critical Changes:
-Removed: theme-variables-vuestic-light-accent-va-info
-Removed: theme-variables-vuestic-light-accent-va-danger
-Removed: theme-variables-vuestic-light-accent-va-warning
