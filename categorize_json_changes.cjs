@@ -208,68 +208,65 @@ main();
 const fs = require('fs');
 const path = require('path');
 
-// Helper function to read a JSON file and return its content
+// Helper functions
 function readJSONFile(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 }
 
-// Helper function to categorize changes between two JSON files
-function categorizeChanges(newTokens, oldTokens) {
+function readChangedFilesList(filePath) {
+  return fs.readFileSync(filePath, 'utf-8').split('\n').filter(line => line.trim() !== '');
+}
+
+// Compare and categorize changes between two JSON objects
+function categorizeChanges(newTokens, oldTokens, changedFiles) {
   const simpleChanges = [];
   const criticalChanges = [];
 
-  for (const [file, newProps] of Object.entries(newTokens)) {
-    const oldProps = oldTokens[file] || {};
+  changedFiles.forEach(file => {
+    if (newTokens[file] && oldTokens[file]) {
+      const newProps = newTokens[file];
+      const oldProps = oldTokens[file];
 
-    for (const [key, newValue] of Object.entries(newProps)) {
-      const oldValue = oldProps[key];
+      Object.keys(newProps).forEach(key => {
+        const newValue = newProps[key];
+        const oldValue = oldProps[key];
 
-      if (oldValue === undefined) {
-        criticalChanges.push(`Added in ${file}: ${key} with value ${JSON.stringify(newValue)}`);
-      } else if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-        simpleChanges.push(`Modified in ${file}: ${key} from ${JSON.stringify(oldValue)} to ${JSON.stringify(newValue)}`);
-      }
+        if (oldValue === undefined) {
+          criticalChanges.push(`Added in ${file}: ${key} with value ${JSON.stringify(newValue)}`);
+        } else if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+          simpleChanges.push(`Modified in ${file}: ${key} from ${JSON.stringify(oldValue)} to ${JSON.stringify(newValue)}`);
+        }
+      });
+
+      Object.keys(oldProps).forEach(key => {
+        if (newProps[key] === undefined) {
+          criticalChanges.push(`Removed from ${file}: ${key}`);
+        }
+      });
     }
-
-    for (const key of Object.keys(oldProps)) {
-      if (!newProps.hasOwnProperty(key)) {
-        criticalChanges.push(`Removed from ${file}: ${key}`);
-      }
-    }
-  }
+  });
 
   return { simpleChanges, criticalChanges };
 }
 
-// Main function
 function main() {
-  const newTokensDir = process.argv[2];
-  const oldTokensDir = process.argv[3];
-  const outputPath = process.argv[4];
+  const args = process.argv.slice(2);
+  const newTokensDir = args[0];
+  const oldTokensDir = args[1];
+  const outputPath = args[2];
+  const changedFilesPath = args[3];
 
-  if (!fs.existsSync(newTokensDir) || !fs.existsSync(oldTokensDir)) {
-    console.error(`Directory not found: ${newTokensDir} or ${oldTokensDir}`);
-    process.exit(1);
-  }
+  const changedFiles = readChangedFilesList(changedFilesPath).filter(file => file.endsWith('.json'));
 
-  const newTokens = {};
-  const oldTokens = {};
-
-  fs.readdirSync(newTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      const data = readJSONFile(path.join(newTokensDir, file));
-      newTokens[file] = data;
-    }
+  const newTokens = {}, oldTokens = {};
+  changedFiles.forEach(file => {
+    const newFilePath = path.join(newTokensDir, file);
+    const oldFilePath = path.join(oldTokensDir, file);
+    if (fs.existsSync(newFilePath)) newTokens[file] = readJSONFile(newFilePath);
+    if (fs.existsSync(oldFilePath)) oldTokens[file] = readJSONFile(oldFilePath);
   });
 
-  fs.readdirSync(oldTokensDir).forEach(file => {
-    if (file.endsWith('.json')) {
-      const data = readJSONFile(path.join(oldTokensDir, file));
-      oldTokens[file] = data;
-    }
-  });
-
-  const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens);
+  const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens, changedFiles);
 
   const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
   fs.writeFileSync(outputPath, output);
