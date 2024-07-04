@@ -26,9 +26,7 @@ jobs:
           node-version: '16'
 
       - name: Install dependencies
-        run: |
-          rm -rf node_modules package-lock.json  # Löscht node_modules und package-lock.json
-          npm install
+        run: npm install
 
       - name: Check JSON syntax
         run: |
@@ -53,19 +51,25 @@ jobs:
             cp tokens/* old_tokens/
           fi
 
-      - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ old_tokens/ output.txt
-
-      - name: Update old tokens
+      - name: Debug - List tokens and old_tokens directories
         run: |
-          rm -rf old_tokens/*
-          cp -r tokens/* old_tokens/
+          echo "Listing files in tokens directory:"
+          ls -la tokens/
+          echo "Listing files in old_tokens directory:"
+          ls -la old_tokens/
+
+      - name: Categorize JSON changes
+        run: node categorize_json_changes.js tokens/ old_tokens/ output.txt
+
+      - name: List output file for debugging
+        run: ls -la output.txt
 
       - name: Upload categorized changes
         uses: actions/upload-artifact@v2
         with:
           name: categorized-changes
           path: output.txt
+          if-no-files-found: warn
 
       - name: Commit and push changes
         if: success()

@@ -237,6 +237,8 @@ function main() {
     const newContent = readJSONFile(newPath);
     const oldContent = readJSONFile(oldPath);
 
+    if (!newContent || !oldContent) return;
+
     Object.keys(newContent).forEach(key => {
       if (!oldContent.hasOwnProperty(key)) {
         changes.push(`Added: ${key} in ${file}`);
@@ -257,6 +259,7 @@ function main() {
     fs.writeFileSync(outputFilePath, output);
     console.log('Changes categorized and written successfully.');
   } else {
+    fs.writeFileSync(outputFilePath, 'No changes to categorize.');
     console.log('No changes to categorize.');
   }
 }
