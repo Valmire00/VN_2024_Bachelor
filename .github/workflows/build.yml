@@ -54,7 +54,7 @@ jobs:
           fi
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.js tokens/ old_tokens/ output.txt
+        run: node categorize_json_changes.cjs tokens/ old_tokens/ output.txt
 
       - name: Update old tokens
         run: |
