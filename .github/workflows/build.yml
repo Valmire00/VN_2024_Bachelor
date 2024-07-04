@@ -1,4 +1,4 @@
-name: Token Processing Workflow
+name: Lint, Build, and Check JSON Tokens
 
 on:
   push:
@@ -7,12 +7,18 @@ on:
     paths:
       - 'tokens/**'
 
+permissions:
+  contents: write
+
 jobs:
-  process-tokens:
+  lint-build-check:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -20,25 +26,63 @@ jobs:
           node-version: '16'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+          npm install deep-diff
 
-      - name: Backup current tokens
+      - name: Prepare old tokens
         run: |
           mkdir -p old_tokens
-          cp -r tokens/* old_tokens/
+          if [ -d "old_tokens" ]; then
+            cp -r old_tokens/* tokens/previous/
+          fi
+
+      - name: Check JSON syntax
+        run: |
+          for file in tokens/*.json; do
+            echo "Checking $file"
+            cat "$file" | jq empty
+          done
+
+      - name: Build CSS from JSON tokens
+        run: node build.mjs
+
+      - name: List dist/theme directory
+        run: ls -la dist/theme
+
+      - name: Run Stylelint
+        run: npx stylelint 'dist/theme/*.css' --fix
+
+      - name: Get changed files
+        id: changed_files
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > changed_files.txt
+          echo "::set-output name=files::$(cat changed_files.txt)"
 
       - name: Analyze token changes
-        run: node token-diff.js # Dieses Skript vergleicht tokens/ mit old_tokens/
+        run: node token-diff.cjs
 
-      - name: Update old tokens
+      - name: Commit and push changes
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          BRANCH_NAME=${{ github.head_ref }}
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m 'Apply automated fixes and updates'
+          git pull origin $BRANCH_NAME --rebase || git rebase --abort
+          git push origin HEAD:$BRANCH_NAME
+
+      - name: Update old tokens directory
         run: |
           rm -rf old_tokens/*
           cp -r tokens/* old_tokens/
 
-      - name: Commit old tokens directory
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add old_tokens/
-          git commit -m 'Update old_tokens directory'
-          git push
+      - name: Upload categorized changes
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt
