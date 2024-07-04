@@ -71,7 +71,7 @@ jobs:
         run: |
           rm -rf old_tokens
           mkdir old_tokens
-          git checkout HEAD -- tokens/
+          git checkout HEAD~1 -- tokens/
           cp -r tokens/* old_tokens/
 
       - name: Upload categorized changes
