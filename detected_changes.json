@@ -1,1 +1,19 @@
-No changes to categorize.
+[
+  {
+    "file": "variablesToken2.json",
+    "delta": {
+      "properties": {
+        "component-variables-soild-time-picker-va-time-picker-column-border-right": [
+          {
+            "value": "#ffffff"
+          }
+        ],
+        "interaction-variables-va_counter_number": [
+          {
+            "value": "1px"
+          }
+        ]
+      }
+    }
+  }
+]
