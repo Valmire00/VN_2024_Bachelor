@@ -1,4 +1,6 @@
 Simple Changes:
-
+Modified: theme-variables-vuestic-light-text-va-text-primary from #262824 to #262825
+Modified: theme-variables-vuestic-light-typography-va-text-selected from #b3d4fc to #b2d4fc
 
 Critical Changes:
+Removed: theme-variables-vuestic-light-accent-va-danger
