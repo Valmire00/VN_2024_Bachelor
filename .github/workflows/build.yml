@@ -46,7 +46,7 @@ jobs:
 
       - name: Get current branch name
         id: vars
-        run: echo "BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=$(git symbolic-ref --short HEAD)" >> $GITHUB_ENV
 
       - name: Verify branch name
         run: echo "Current branch is $BRANCH_NAME"
