@@ -121,29 +121,21 @@ function compareTokens(oldTokens, newTokens) {
         modified: []
     };
 
-    // Check for new or modified tokens
     Object.keys(newTokens).forEach(file => {
         if (!(file in oldTokens)) {
-            changes.added.push(file);
+            changes.added.push(`${file}: ${JSON.stringify(newTokens[file])}`);
         } else {
             Object.keys(newTokens[file]).forEach(token => {
                 if (!(token in oldTokens[file])) {
-                    changes.added.push(`${file}: ${token}`);
+                    changes.added.push(`${file}: ${token} -> ${JSON.stringify(newTokens[file][token])}`);
                 } else if (JSON.stringify(newTokens[file][token]) !== JSON.stringify(oldTokens[file][token])) {
-                    changes.modified.push(`${file}: ${token}`);
+                    changes.modified.push(`${file}: ${token} from ${JSON.stringify(oldTokens[file][token])} to ${JSON.stringify(newTokens[file][token])}`);
                 }
             });
-        }
-    });
 
-    // Check for removed tokens
-    Object.keys(oldTokens).forEach(file => {
-        if (!(file in newTokens)) {
-            changes.removed.push(file);
-        } else {
             Object.keys(oldTokens[file]).forEach(token => {
                 if (!(token in newTokens[file])) {
-                    changes.removed.push(`${file}: ${token}`);
+                    changes.removed.push(`${file}: ${token} -> ${JSON.stringify(oldTokens[file][token])}`);
                 }
             });
         }
@@ -163,9 +155,9 @@ function main() {
 
     const categorizedChangesPath = process.argv[4];
     const categorizedChanges = `
-        Added Tokens: ${changes.added.join(', ')}
-        Removed Tokens: ${changes.removed.join(', ')}
-        Modified Tokens: ${changes.modified.join(', ')}
+        Added Tokens: \n${changes.added.join('\n')}
+        Removed Tokens: \n${changes.removed.join('\n')}
+        Modified Tokens: \n${changes.modified.join('\n')}
     `;
 
     fs.writeFileSync(categorizedChangesPath, categorizedChanges);
