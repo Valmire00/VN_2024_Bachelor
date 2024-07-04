@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'tokens/**'
+      - 'tokens/**'  # Pfad anpassen, falls nötig
 
 permissions:
   contents: write
@@ -17,8 +17,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Fetch all history to ensure we can rebase
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -29,12 +27,14 @@ jobs:
         run: |
           rm -rf node_modules package-lock.json
           npm install
+
       - name: Check JSON syntax
         run: |
           for file in tokens/*.json; do
             echo "Checking $file"
             cat "$file" | jq empty
           done
+
       - name: Build CSS from JSON tokens
         run: node build.mjs
 
@@ -56,8 +56,11 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
+
       - name: Generate code diff
-        run: echo "old_tokens_dir: old_tokens" > code_diff.txt
+        run: |
+          echo "old_tokens_dir: old_tokens" > code_diff.txt
+          git diff HEAD~1 HEAD >> code_diff.txt
 
       - name: Extract old tokens
         run: |
@@ -66,7 +69,7 @@ jobs:
           cp -r tokens/* old_tokens/
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ old_tokens/ categorized_changes.txt
+        run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
 
       - name: Upload categorized changes
         uses: actions/upload-artifact@v2
