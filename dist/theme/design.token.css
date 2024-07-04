@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Thu, 04 Jul 2024 21:20:16 GMT
+ * Generated on Thu, 04 Jul 2024 21:21:50 GMT
  */
 
 :root {
@@ -415,4 +415,5 @@
   --properties-component-variables-soild-time-picker-va-time-picker-cell-active-background: #fff;
   --properties-component-variables-soild-time-picker-va-time-picker-cell-active-color: #fff;
   --properties-component-variables-soild-time-picker-va-time-picker-column-border-right: #fff;
+  --properties-interaction-variables-va-counter-number: 1px;
 }

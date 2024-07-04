@@ -1,1 +1,8 @@
-No changes to categorize.
+Modified:
+Modified - File: variablesToken2.json, Key: properties, Changes: {
+  "interaction-variables-va_counter_number": [
+    {
+      "value": "1px"
+    }
+  ]
+}
