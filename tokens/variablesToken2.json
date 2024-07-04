@@ -1,16 +1,19 @@
 {
   "properties": {
+    "theme-variables-vuestic-light-accent-va-primary": {
+      "value": "#154ec1"
+    },
     "theme-variables-vuestic-light-accent-va-secondary": {
       "value": "#767c88"
     },
     "theme-variables-vuestic-light-accent-va-success": {
-      "value": "#3d9219"
+      "value": "#3d9209"
     },
     "theme-variables-vuestic-light-accent-va-info": {
       "value": "#158de3"
     },
     "theme-variables-vuestic-light-accent-va-danger": {
-      "value": "#e41222"
+      "value": "#e42222"
     },
     "theme-variables-vuestic-light-accent-va-warning": {
       "value": "#ffd43a"
@@ -22,7 +25,7 @@
       "value": "#ffffff"
     },
     "theme-variables-vuestic-light-background-va-background-element": {
-      "value": "#ecf0f3"
+      "value": "#ecf0f1"
     },
     "theme-variables-vuestic-light-background-va-background-border": {
       "value": "#dee5f2"
@@ -310,10 +313,10 @@
       "value": "-16px"
     },
     "component-variables-default-avatar-va-avatar-border-radius": {
-      "value": "9px"
+      "value": "999px"
     },
     "component-variables-default-badge-va-badge-dot-size": {
-      "value": "9px"
+      "value": "8px"
     },
     "component-variables-default-badge-va-badge-text-wrapper-border-radius": {
       "value": "2px"
