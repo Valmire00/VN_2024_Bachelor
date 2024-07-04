@@ -1,0 +1,23 @@
+const fs = require('fs');
+const diff = require('deep-diff').diff;
+
+const oldFile = JSON.parse(fs.readFileSync('path/to/old/file.json', 'utf8'));
+const newFile = JSON.parse(fs.readFileSync('path/to/new/file.json', 'utf8'));
+
+const differences = diff(oldFile, newFile);
+
+if (differences) {
+  differences.forEach(change => {
+    if (change.kind === 'N') {
+      console.log(`Neuer Token: ${change.path.join('.')} = ${change.rhs}`);
+    } else if (change.kind === 'D') {
+      console.log(`Gelöschter Token: ${change.path.join('.')}`);
+    } else if (change.kind === 'E') {
+      console.log(`Geänderter Token: ${change.path.join('.')} von ${change.lhs} zu ${change.rhs}`);
+    }
+  });
+} else {
+  console.log('Keine Änderungen.');
+}
+
+fs.writeFileSync('change_report.txt', JSON.stringify(differences, null, 2));
