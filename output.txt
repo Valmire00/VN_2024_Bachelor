@@ -1,14 +1,26 @@
+Changes in new_tokens.json:
+{
+  "property": {
+    "theme-variables-new-theme-accent-va-informa": [
+      {
+        "value": "#113335"
+      },
+      0,
+      0
+    ]
+  }
+}
 Changes in variablesToken2.json:
 {
   "properties": {
-    "theme-variables-vuestic-light-utility-va-shadow": [
-      {
-        "value": "rgba(0, 0, 0, 0.1200)"
-      }
-    ],
-    "theme-variables-vuestic-light-utility-va-on-primary": [
+    "theme-variables-vuestic-light-background-va-background-secondary": [
       {
         "value": "#ffffff"
+      }
+    ],
+    "theme-variables-vuestic-light-text-va-text-primary": [
+      {
+        "value": "#262824"
       }
     ]
   }
