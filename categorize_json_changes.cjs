@@ -1,4 +1,4 @@
-const fs = require('fs');
+/*const fs = require('fs');
 const path = require('path');
 
 // Helper function to read a JSON file and return its content
@@ -90,6 +90,78 @@ function main() {
 
   console.log('Categorized changes written successfully.');
   console.log(output); // Print output for debugging
+}
+
+main();
+*/
+const fs = require('fs');
+const path = require('path');
+
+function readJSONFile(filePath) {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function getTokens(directory) {
+    const tokens = {};
+    const files = fs.readdirSync(directory);
+    files.forEach(file => {
+        if (path.extname(file) === '.json') {
+            const filePath = path.join(directory, file);
+            const fileTokens = readJSONFile(filePath);
+            tokens[file] = fileTokens;
+        }
+    });
+    return tokens;
+}
+
+function compareTokens(oldTokens, newTokens) {
+    const changes = {
+        added: [],
+        removed: [],
+        modified: []
+    };
+
+    Object.keys(newTokens).forEach(file => {
+        if (!(file in oldTokens)) {
+            changes.added.push(file);
+        } else {
+            Object.keys(newTokens[file]).forEach(token => {
+                if (!(token in oldTokens[file])) {
+                    changes.added.push(`${file}: ${token}`);
+                } else if (JSON.stringify(newTokens[file][token]) !== JSON.stringify(oldTokens[file][token])) {
+                    changes.modified.push(`${file}: ${token}`);
+                }
+            });
+
+            Object.keys(oldTokens[file]).forEach(token => {
+                if (!(token in newTokens[file])) {
+                    changes.removed.push(`${file}: ${token}`);
+                }
+            });
+        }
+    });
+
+    return changes;
+}
+
+function main() {
+    const newTokensDir = process.argv[2];
+    const oldTokensDir = 'old_tokens';
+
+    const newTokens = getTokens(newTokensDir);
+    const oldTokens = getTokens(oldTokensDir);
+
+    const changes = compareTokens(oldTokens, newTokens);
+
+    const categorizedChangesPath = process.argv[4];
+    const categorizedChanges = `
+        Added Tokens: ${changes.added.join(', ')}
+        Removed Tokens: ${changes.removed.join(', ')}
+        Modified Tokens: ${changes.modified.join(', ')}
+    `;
+
+    fs.writeFileSync(categorizedChangesPath, categorizedChanges);
+    console.log('Categorized changes written successfully.');
 }
 
 main();
