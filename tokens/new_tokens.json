@@ -8,6 +8,9 @@
     },
     "theme-variables-new-theme-accent-va-success": {
       "value": "#778899"
+    },
+    "theme-variables-new-theme-accent-va-info": {
+      "value": "#99aabb"
     }
   }
 }
