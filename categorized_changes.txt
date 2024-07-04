@@ -1,7 +1,5 @@
 Simple Changes:
-Modified in variablesToken2.json: theme-variables-vuestic-dark-sizes-size-small from 50px to 32px
+Modified in new_tokens.json: property from [object Object] to [object Object]
+Modified in variablesToken2.json: properties from [object Object] to [object Object]
 
 Critical Changes:
-Added in variablesToken2.json: theme-variables-vuestic-light-background-va-background-border with value #dee5f2
-Added in variablesToken2.json: theme-variables-vuestic-light-text-va-text-primary with value #262824
-Removed from variablesToken2.json: theme-variables-vuestic-light-background-va-background-secondary
