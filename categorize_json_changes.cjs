@@ -51,27 +51,16 @@ function categorizeChanges(newTokensDir, oldTokensDir) {
 // Main function
 function main() {
   const newTokensDir = process.argv[2];
-  const codeDiffPath = process.argv[3];
+  const oldTokensDir = process.argv[3];
   const outputPath = process.argv[4];
 
   console.log(`Reading new tokens from: ${newTokensDir}`);
+  console.log(`Reading old tokens from: ${oldTokensDir}`);
 
   if (!fs.existsSync(newTokensDir)) {
     console.error(`Directory not found: ${newTokensDir}`);
     process.exit(1);
   }
-
-  // Read old tokens directory from code_diff.txt
-  const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
-  const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
-
-  if (!oldTokensDirMatch) {
-    console.error(`old_tokens_dir not found in code_diff.txt`);
-    process.exit(1);
-  }
-
-  const oldTokensDir = oldTokensDirMatch[1];
-  console.log(`Reading old tokens from: ${oldTokensDir}`);
 
   if (!fs.existsSync(oldTokensDir)) {
     console.error(`Directory not found: ${oldTokensDir}`);
