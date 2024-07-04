@@ -52,20 +52,16 @@ function readJSONFile(filePath) {
 
 main();
 */
-const fs = require('fs');
-const path = require('path');
-const jsondiffpatch = require('jsondiffpatch');
 
-function readJSONFile(filePath) {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  } catch (e) {
-    console.error(`Error reading JSON from ${filePath}:`, e);
-    return null;
-  }
-}
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 async function main() {
+  const jsondiffpatch = await import('jsondiffpatch');
   const newTokensDir = process.argv[2];
   const oldTokensDir = process.argv[3];
   const outputFilePath = process.argv[4];
@@ -93,12 +89,12 @@ async function main() {
     const delta = jsondiffpatch.diff(oldContent, newContent);
     if (delta) {
       Object.keys(delta).forEach(key => {
-        if (typeof delta[key] === 'object' && delta[key].length === 1 && delta[key][0] === undefined) {
-          // Added key
-          changes.added.push({ file, key, value: newContent[key] });
-        } else if (typeof delta[key] === 'object' && delta[key].length === 1 && delta[key][1] === 0) {
+        if (delta[key] === undefined) {
           // Removed key
           changes.removed.push({ file, key });
+        } else if (!oldContent.hasOwnProperty(key)) {
+          // Added key
+          changes.added.push({ file, key, value: newContent[key] });
         } else {
           // Modified key
           changes.modified.push({ file, key, oldValue: oldContent[key], newValue: newContent[key] });
@@ -135,6 +131,15 @@ async function main() {
   } else {
     fs.writeFileSync(outputFilePath, 'No changes to categorize.');
     console.log('No changes to categorize.');
+  }
+}
+
+function readJSONFile(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch (e) {
+    console.error(`Error reading JSON from ${filePath}:`, e);
+    return null;
   }
 }
 
