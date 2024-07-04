@@ -1,7 +1,7 @@
 name: Lint, Build, and Check JSON Tokens
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
