@@ -2,3 +2,4 @@ Simple Changes:
 
 
 Critical Changes:
+Removed: theme-variables-vuestic-light-accent-va-danger
