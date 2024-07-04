@@ -3,9 +3,6 @@
     "theme-variables-vuestic-light-accent-va-info": {
       "value": "#158de3"
     },
-    "theme-variables-vuestic-light-accent-va-danger": {
-      "value": "#e42222"
-    },
     "theme-variables-vuestic-light-accent-va-warning": {
       "value": "#ffd43a"
     },
