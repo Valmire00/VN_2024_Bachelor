@@ -207,18 +207,9 @@ main();
 
 const fs = require('fs');
 const path = require('path');
-const jsondiffpatch = require('jsondiffpatch');
 
-function readJSONFile(filePath) {
-  try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-  } catch (e) {
-    console.error(`Error reading JSON from ${filePath}:`, e);
-    return null;
-  }
-}
-
-function main() {
+async function main() {
+  const jsondiffpatch = await import('jsondiffpatch');
   const newTokensDir = process.argv[2];
   const oldTokensDir = process.argv[3];
   const outputFilePath = process.argv[4];
@@ -253,6 +244,15 @@ function main() {
   } else {
     fs.writeFileSync(outputFilePath, 'No changes to categorize.');
     console.log('No changes to categorize.');
+  }
+}
+
+function readJSONFile(filePath) {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch (e) {
+    console.error(`Error reading JSON from ${filePath}:`, e);
+    return null;
   }
 }
 
