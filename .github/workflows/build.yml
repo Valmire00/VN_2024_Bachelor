@@ -1,7 +1,7 @@
 name: Lint, Build, and Check JSON Tokens
 
 on:
-  pull_request:
+  push:
     branches:
       - main
     paths:
@@ -46,27 +46,26 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Get changed files
-        id: changed_files
+      - name: Initialize old tokens if not present
         run: |
-          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} > changed_files.txt
-          echo "::set-output name=files::$(cat changed_files.txt)"
+          mkdir -p old_tokens
+          if [ -z "$(ls -A old_tokens)" ]; then
+            cp tokens/* old_tokens/
+          fi
 
-      - name: Print code_diff.txt for debugging
-        run: cat code_diff.txt
-
-      - name: Get changed JSON files in tokens directory
-        run: |
-          git diff --name-only ${{ github.event.before }} ${{ github.event.after }} 'tokens/*.json' > changed_files.txt
-            
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ old_tokens categorized_changes.txt changed_files.txt
+        run: node categorize_json_changes.cjs tokens/ old_tokens categorized_changes.txt
 
-      - name: List files in tokens directory for debugging
-        run: ls -la tokens/
+      - name: Update old tokens
+        run: |
+          rm -rf old_tokens/*
+          cp -r tokens/* old_tokens/
 
-      - name: Display content of changed_files.txt for debugging
-        run: cat changed_files.txt
+      - name: Upload categorized changes
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt
 
       - name: Commit and push changes
         if: success()
@@ -77,18 +76,6 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add .
-          git commit -m 'Apply Stylelint fixes'
+          git commit -m 'Apply automated fixes and updates'
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
-
-      - name: Cleanup old tokens directory
-        run: |
-          rm -rf old_tokens
-          mkdir old_tokens
-          cp -r tokens/* old_tokens/
-
-      - name: Upload categorized changes
-        uses: actions/upload-artifact@v2
-        with:
-          name: categorized-changes
-          path: categorized_changes.txt

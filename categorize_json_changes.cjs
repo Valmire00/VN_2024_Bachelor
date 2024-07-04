@@ -208,80 +208,48 @@ main();
 const fs = require('fs');
 const path = require('path');
 
-// Helper functions
 function readJSONFile(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-}
-
-function readChangedFilesList(filePath) {
-  return fs.readFileSync(filePath, 'utf-8').split('\n').filter(line => line.trim() !== '');
-}
-
-// Compare and categorize changes between two JSON objects
-function categorizeChanges(newTokens, oldTokens, changedFiles) {
-  const simpleChanges = [];
-  const criticalChanges = [];
-
-  changedFiles.forEach(file => {
-    if (newTokens[file] && oldTokens[file]) {
-      const newProps = newTokens[file];
-      const oldProps = oldTokens[file];
-
-      Object.keys(newProps).forEach(key => {
-        const newValue = newProps[key];
-        const oldValue = oldProps[key];
-
-        if (oldValue === undefined) {
-          criticalChanges.push(`Added in ${file}: ${key} with value ${JSON.stringify(newValue)}`);
-        } else if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-          simpleChanges.push(`Modified in ${file}: ${key} from ${JSON.stringify(oldValue)} to ${JSON.stringify(newValue)}`);
-        }
-      });
-
-      Object.keys(oldProps).forEach(key => {
-        if (newProps[key] === undefined) {
-          criticalChanges.push(`Removed from ${file}: ${key}`);
-        }
-      });
-    }
-  });
-
-  return { simpleChanges, criticalChanges };
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch (e) {
+    console.error(`Error reading JSON from ${filePath}:`, e);
+    return null;
+  }
 }
 
 function main() {
-  const args = process.argv.slice(2);
-  const newTokensDir = args[0];
-  const oldTokensDir = args[1];
-  const outputPath = args[2];
-  const changedFilesPath = args[3];
+  const newTokensDir = process.argv[2];
+  const oldTokensDir = process.argv[3];
+  const outputFilePath = process.argv[4];
 
-  const changedFiles = readChangedFilesList(changedFilesPath);
-  console.log('Changed Files:', changedFiles); // Debug output
+  const newFiles = fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json'));
+  const oldFiles = fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json'));
 
-  const newTokens = {}, oldTokens = {};
-  changedFiles.forEach(file => {
-    const newFilePath = path.join(newTokensDir, file);
-    const oldFilePath = path.join(oldTokensDir, file);
-    if (fs.existsSync(newFilePath)) {
-      newTokens[file] = readJSONFile(newFilePath);
-    }
-    if (fs.existsSync(oldFilePath)) {
-      oldTokens[file] = readJSONFile(oldFilePath);
-    }
+  const changes = [];
+
+  newFiles.forEach(file => {
+    const newPath = path.join(newTokensDir, file);
+    const oldPath = path.join(oldTokensDir, file);
+    const newContent = readJSONFile(newPath);
+    const oldContent = readJSONFile(oldPath) || {}; // Assume empty if not exists
+
+    Object.keys(newContent).forEach(key => {
+      if (!oldContent.hasOwnProperty(key)) {
+        changes.push(`Added: ${key} in ${file}`);
+      } else if (JSON.stringify(newContent[key]) !== JSON.stringify(oldContent[key])) {
+        changes.push(`Modified: ${key} in ${file} from ${JSON.stringify(oldContent[key])} to ${JSON.stringify(newContent[key])}`);
+      }
+    });
+
+    Object.keys(oldContent).forEach(key => {
+      if (!newContent.hasOwnProperty(key)) {
+        changes.push(`Removed: ${key} in ${file}`);
+      }
+    });
   });
 
-  console.log('New Tokens:', newTokens); // Debug output
-  console.log('Old Tokens:', oldTokens); // Debug output
-
-  const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens, changedFiles);
-
-  console.log('Simple Changes:', simpleChanges); // Debug output
-  console.log('Critical Changes:', criticalChanges); // Debug output
-
-  const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
-  fs.writeFileSync(outputPath, output);
-  console.log('Categorized changes written successfully.');
+  fs.writeFileSync(outputFilePath, `Changes:\n${changes.join('\n')}`);
+  console.log('Changes categorized and written successfully.');
 }
 
 main();
