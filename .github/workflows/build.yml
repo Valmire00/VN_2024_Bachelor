@@ -46,19 +46,6 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Commit and push changes
-        if: success()
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          BRANCH_NAME=${{ github.head_ref }}
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .
-          git commit -m 'Apply Stylelint fixes'
-          git pull origin $BRANCH_NAME --rebase || git rebase --abort
-          git push origin HEAD:$BRANCH_NAME
-
       - name: Generate code diff
         run: |
           echo "old_tokens_dir: old_tokens" > code_diff.txt
@@ -78,3 +65,16 @@ jobs:
         with:
           name: categorized-changes
           path: categorized_changes.txt
+
+      - name: Commit and push changes
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          BRANCH_NAME=${{ github.head_ref }}
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m 'Apply Stylelint fixes'
+          git pull origin $BRANCH_NAME --rebase || git rebase --abort
+          git push origin HEAD:$BRANCH_NAME
