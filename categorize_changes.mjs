@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'url';
 /*
 const fs = require('fs');
 const path = require('path');
@@ -52,8 +53,98 @@ function readJSONFile(filePath) {
 
 main();
 */
-
+/*
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+async function main() {
+  const changesFilePath = process.argv[2];
+  const outputFilePath = process.argv[3];
+
+  const changes = readJSONFile(changesFilePath);
+  if (changes === 'No changes to categorize.') {
+    fs.writeFileSync(outputFilePath, changes);
+    console.log(changes);
+    return;
+  }
+
+  const changesData = JSON.parse(changes);
+  const categorizedChanges = {
+    added: [],
+    modified: [],
+    removed: []
+  };
+
+  changesData.forEach(change => {
+    const { file, delta } = change;
+
+    Object.keys(delta).forEach(key => {
+      if (Array.isArray(delta[key]) && delta[key].length === 1) {
+        // Added key
+        categorizedChanges.added.push({ file, key, value: delta[key][0] });
+      } else if (Array.isArray(delta[key]) && delta[key].length === 1 && delta[key][0] === undefined) {
+        // Removed key
+        categorizedChanges.removed.push({ file, key });
+      } else if (Array.isArray(delta[key]) && delta[key].length === 2) {
+        // Modified key
+        categorizedChanges.modified.push({ file, key, oldValue: delta[key][0], newValue: delta[key][1] });
+      } else {
+        // Modified key (detailed changes)
+        categorizedChanges.modified.push({ file, key, changes: delta[key] });
+      }
+    });
+  });
+
+  let output = '';
+  if (categorizedChanges.added.length > 0) {
+    output += 'Added:\n';
+    categorizedChanges.added.forEach(change => {
+      output += `File: ${change.file}, Key: ${change.key}, Value: ${JSON.stringify(change.value, null, 2)}\n`;
+    });
+  }
+
+  if (categorizedChanges.modified.length > 0) {
+    output += 'Modified:\n';
+    categorizedChanges.modified.forEach(change => {
+      if (change.oldValue !== undefined && change.newValue !== undefined) {
+        output += `File: ${change.file}, Key: ${change.key}, Old Value: ${JSON.stringify(change.oldValue, null, 2)}, New Value: ${JSON.stringify(change.newValue, null, 2)}\n`;
+      } else {
+        output += `File: ${change.file}, Key: ${change.key}, Changes: ${JSON.stringify(change.changes, null, 2)}\n`;
+      }
+    });
+  }
+
+  if (categorizedChanges.removed.length > 0) {
+    output += 'Removed:\n';
+    categorizedChanges.removed.forEach(change => {
+      output += `File: ${change.file}, Key: ${change.key}\n`;
+    });
+  }
+
+  if (output.length > 0) {
+    fs.writeFileSync(outputFilePath, output);
+    console.log('Changes categorized and written successfully.');
+  } else {
+    fs.writeFileSync(outputFilePath, 'No changes to categorize.');
+    console.log('No changes to categorize.');
+  }
+}
+
+function readJSONFile(filePath) {
+  try {
+    return fs.readFileSync(filePath, 'utf-8');
+  } catch (e) {
+    console.error(`Error reading JSON from ${filePath}:`, e);
+    return null;
+  }
+}
+
+main();
+*/
 import fs from 'fs';
 import path from 'path';
 
