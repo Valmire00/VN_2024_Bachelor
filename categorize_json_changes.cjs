@@ -222,16 +222,19 @@ function main() {
   const oldTokensDir = process.argv[3];
   const outputFilePath = process.argv[4];
 
-  const newFiles = fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json'));
-  const oldFiles = fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json'));
+  const newFiles = new Set(fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json')));
+  const oldFiles = new Set(fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json')));
+
+  // Find common files in both new and old directories
+  const commonFiles = [...newFiles].filter(file => oldFiles.has(file));
 
   const changes = [];
 
-  newFiles.forEach(file => {
+  commonFiles.forEach(file => {
     const newPath = path.join(newTokensDir, file);
     const oldPath = path.join(oldTokensDir, file);
     const newContent = readJSONFile(newPath);
-    const oldContent = readJSONFile(oldPath) || {}; // Assume empty if not exists
+    const oldContent = readJSONFile(oldPath);
 
     Object.keys(newContent).forEach(key => {
       if (!oldContent.hasOwnProperty(key)) {
@@ -248,8 +251,13 @@ function main() {
     });
   });
 
-  fs.writeFileSync(outputFilePath, `Changes:\n${changes.join('\n')}`);
-  console.log('Changes categorized and written successfully.');
+  if (changes.length > 0) {
+    const output = `Changes:\n${changes.join('\n')}`;
+    fs.writeFileSync(outputFilePath, output);
+    console.log('Changes categorized and written successfully.');
+  } else {
+    console.log('No changes to categorize.');
+  }
 }
 
 main();
