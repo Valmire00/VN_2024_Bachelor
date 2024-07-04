@@ -50,7 +50,7 @@ jobs:
         run: cp -r tokens tokens_previous
 
       - name: Categorize JSON changes
-        run: node categorizeChanges.cjs tokens_previous tokens/ categorized_changes.txt
+        run: node categorizeChanges.cjs tokens_previous tokens categorized_changes.txt
 
       - name: Commit and push changes
         if: success()
