@@ -1,0 +1,16 @@
+{
+  "theme-variables-new-light-accent-va-primary": { "value": "#abcdef" },
+  "theme-variables-new-light-accent-va-secondary": { "value": "#123456" },
+  "theme-variables-new-light-accent-va-success": { "value": "#78abcd" },
+  "theme-variables-new-light-accent-va-info": { "value": "#56789a" },
+  "theme-variables-new-light-accent-va-danger": { "value": "#abcdef" },
+  "theme-variables-new-light-accent-va-warning": { "value": "#fedcba" },
+  "theme-variables-new-light-background-va-background-primary": { "value": "#000000" },
+  "theme-variables-new-light-background-va-background-secondary": { "value": "#111111" },
+  "theme-variables-new-light-background-va-background-border": { "value": "#222222" },
+  "theme-variables-new-light-text-va-text-primary": { "value": "#333333" },
+  "theme-variables-new-light-text-va-text-inverted": { "value": "#444444" },
+  "theme-variables-new-light-utility-va-shadow": { "value": "rgba(0, 0, 0, 0.5)" },
+  "theme-variables-new-light-utility-va-focus": { "value": "#555555" },
+  "theme-variables-new-light-utility-va-on-primary": { "value": "#666666" }
+}
