@@ -1,23 +1,24 @@
 /**
  * Do not edit directly
- * Generated on Thu, 04 Jul 2024 18:52:30 GMT
+ * Generated on Thu, 04 Jul 2024 18:54:38 GMT
  */
 
 :root {
+  --property-theme-variables-new-theme-accent-va-primary: #123;
   --property-theme-variables-new-theme-accent-va-secondary: #4455;
-  --property-theme-variables-new-theme-accent-va-success: #789;
+  --property-theme-variables-new-theme-accent-va-success: #777899;
   --property-theme-variables-new-theme-accent-va-info: #10aabc;
+  --property-theme-variables-new-theme-accent-va-informa: #123;
   --properties-theme-variables-vuestic-light-accent-va-warning: #ffd43b;
   --properties-theme-variables-vuestic-light-background-va-background-primary: #fff;
   --properties-theme-variables-vuestic-light-background-va-background-secondary: #fff;
   --properties-theme-variables-vuestic-light-text-va-text-primary: #262824;
-  --properties-theme-variables-vuestic-light-text-va-text-inverted: #fff;
   --properties-theme-variables-vuestic-light-utility-va-shadow: rgba(0, 0, 0, 0.12);
   --properties-theme-variables-vuestic-light-utility-va-focus: #49a8ff;
   --properties-theme-variables-vuestic-light-utility-va-on-primary: #fff;
   --properties-theme-variables-vuestic-light-typography-va-text-selected: #b3d4fc;
   --properties-theme-variables-vuestic-light-typography-va-text-highlighted: rgba(255, 197, 39, 0.31);
-  --properties-theme-variables-vuestic-light-typography-va-link-color: #154ec1;
+  --properties-theme-variables-vuestic-light-typography-va-link-color: #154ec6;
   --properties-theme-variables-vuestic-light-typography-va-link-color-secondary: #767c88;
   --properties-theme-variables-vuestic-light-typography-va-link-color-hover: #2364e7;
   --properties-theme-variables-vuestic-light-typography-va-link-color-active: #5587ec;

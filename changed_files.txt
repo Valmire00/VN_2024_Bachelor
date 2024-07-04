@@ -1,2 +1,2 @@
-.github/workflows/build.yml
-categorize_json_changes.cjs
+tokens/new_tokens.json
+tokens/variablesToken2.json
