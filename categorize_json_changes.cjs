@@ -395,7 +395,7 @@ const categorizeChanges = (prevTokens, newTokens) => {
 
   for (const key in newTokens) {
     if (!prevTokens[key]) {
-      changes.simpleChanges.push(`Added: ${key}`);
+      changes.simpleChanges.push(`Added: ${key} with value ${JSON.stringify(newTokens[key])}`);
     } else if (JSON.stringify(prevTokens[key]) !== JSON.stringify(newTokens[key])) {
       changes.simpleChanges.push(`Modified: ${key} from ${JSON.stringify(prevTokens[key])} to ${JSON.stringify(newTokens[key])}`);
     }
@@ -415,8 +415,8 @@ const newFiles = fs.readdirSync(newDir).filter(file => file.endsWith('.json'));
 
 let categorizedChanges = '';
 
-prevFiles.forEach(file => {
-  const prevTokens = JSON.parse(fs.readFileSync(path.join(prevDir, file)));
+newFiles.forEach(file => {
+  const prevTokens = prevFiles.includes(file) ? JSON.parse(fs.readFileSync(path.join(prevDir, file))) : {};
   const newTokens = JSON.parse(fs.readFileSync(path.join(newDir, file)));
   
   const changes = categorizeChanges(prevTokens, newTokens);
