@@ -52,7 +52,7 @@ jobs:
           git diff HEAD~1 HEAD >> code_diff.txt
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ categorized_changes.txt
+        run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
 
       - name: Commit and push changes
         if: success()
@@ -71,7 +71,7 @@ jobs:
         run: |
           rm -rf old_tokens
           mkdir old_tokens
-          git checkout HEAD~1 -- tokens/
+          git checkout HEAD -- tokens/
           cp -r tokens/* old_tokens/
 
       - name: Upload categorized changes
