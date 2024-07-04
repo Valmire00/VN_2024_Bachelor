@@ -55,8 +55,8 @@ jobs:
       - name: Print code_diff.txt for debugging
         run: cat code_diff.txt
 
-      - name: Analyze token changes
-        run: node token-diff.js
+      - name: Categorize JSON changes
+        run: node categorize_json_changes.cjs tokens/ old_tokens categorized_changes.txt
 
       - name: Commit and push changes
         if: success()
