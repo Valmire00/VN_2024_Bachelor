@@ -1,8 +1,5 @@
 { 
   "property": {
-    "theme-variables-new-theme-accent-va-primary": {
-      "value": "#112233"
-    },
     "theme-variables-new-theme-accent-va-secondary": {
       "value": "#4455"
     },
