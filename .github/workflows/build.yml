@@ -27,8 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          rm -rf node_modules package-lock.json  # Löscht node_modules und package-lock.json
           npm install
+          npm install jsondiffpatch
 
       - name: Check JSON syntax
         run: |
@@ -61,7 +61,7 @@ jobs:
           ls -la old_tokens/
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ old_tokens/ output.txt
+        run: node categorize_json_changes.js tokens/ old_tokens/ output.txt
 
       - name: List output file for debugging
         run: ls -la output.txt

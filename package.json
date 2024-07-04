@@ -14,6 +14,7 @@
     "diff": "^5.2.0",
     "fs": "^0.0.1-security",
     "jq": "^1.0.0",
+    "jsondiffpatch": "^0.6.0",
     "lodash": "^4.17.21",
     "style-dictionary": "3.9.0",
     "stylelint": "^13.13.1",

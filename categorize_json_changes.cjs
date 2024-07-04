@@ -207,7 +207,7 @@ main();
 
 const fs = require('fs');
 const path = require('path');
-const _ = require('lodash');  // Importieren von Lodash
+const jsondiffpatch = require('jsondiffpatch');
 
 function readJSONFile(filePath) {
   try {
@@ -239,23 +239,15 @@ function main() {
 
     if (!newContent || !oldContent) return;
 
-    Object.keys(newContent).forEach(key => {
-      if (!oldContent.hasOwnProperty(key)) {
-        changes.push(`Added: ${key} in ${file}`);
-      } else if (!_.isEqual(newContent[key], oldContent[key])) {
-        changes.push(`Modified: ${key} in ${file} from ${JSON.stringify(oldContent[key])} to ${JSON.stringify(newContent[key])}`);
-      }
-    });
-
-    Object.keys(oldContent).forEach(key => {
-      if (!newContent.hasOwnProperty(key)) {
-        changes.push(`Removed: ${key} in ${file}`);
-      }
-    });
+    const delta = jsondiffpatch.diff(oldContent, newContent);
+    if (delta) {
+      changes.push(`Changes in ${file}:`);
+      changes.push(JSON.stringify(delta, null, 2));
+    }
   });
 
   if (changes.length > 0) {
-    const output = `Changes:\n${changes.join('\n')}`;
+    const output = changes.join('\n');
     fs.writeFileSync(outputFilePath, output);
     console.log('Changes categorized and written successfully.');
   } else {
