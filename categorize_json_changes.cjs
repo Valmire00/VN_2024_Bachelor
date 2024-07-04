@@ -200,7 +200,7 @@ function main() {
 }
 
 main();
-*/
+
 const fs = require('fs');
 const path = require('path');
 
@@ -283,3 +283,91 @@ function main() {
 }
 
 main();
+*/
+
+const fs = require('fs');
+const path = require('path');
+
+function loadJSON(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+}
+
+function compareJSON(oldData, newData) {
+  const changes = {};
+  const allKeys = new Set([...Object.keys(oldData), ...Object.keys(newData)]);
+
+  allKeys.forEach(key => {
+    if (!oldData.hasOwnProperty(key)) {
+      changes[key] = { old: 'not present', new: newData[key] };
+    } else if (!newData.hasOwnProperty(key)) {
+      changes[key] = { old: oldData[key], new: 'not present' };
+    } else if (JSON.stringify(oldData[key]) !== JSON.stringify(newData[key])) {
+      changes[key] = { old: oldData[key], new: newData[key] };
+    }
+  });
+
+  return changes;
+}
+
+function formatChanges(fileName, changes) {
+  if (Object.keys(changes).length === 0) {
+    return `file: "${fileName}": no changes made\n`;
+  }
+  
+  let result = `Changes in ${fileName}:\n`;
+  Object.keys(changes).forEach(key => {
+    result += `  - ${key}: from ${JSON.stringify(changes[key].old)} to ${JSON.stringify(changes[key].new)}\n`;
+  });
+  return result;
+}
+
+function processFiles(newTokensDir, oldTokensDir) {
+  const newFiles = fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json'));
+  const oldFiles = fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json'));
+  const allFiles = new Set([...newFiles, ...oldFiles]);
+  
+  let result = '';
+
+  allFiles.forEach(file => {
+    const newFilePath = path.join(newTokensDir, file);
+    const oldFilePath = path.join(oldTokensDir, file);
+    const newFileData = fs.existsSync(newFilePath) ? loadJSON(newFilePath) : {};
+    const oldFileData = fs.existsSync(oldFilePath) ? loadJSON(oldFilePath) : {};
+    const changes = compareJSON(oldFileData, newFileData);
+    result += formatChanges(file, changes);
+  });
+
+  return result;
+}
+
+const newTokensDir = process.argv[2];
+const codeDiffPath = process.argv[3];
+const outputPath = process.argv[4];
+
+if (!fs.existsSync(newTokensDir)) {
+  console.error(`Directory not found: ${newTokensDir}`);
+  process.exit(1);
+}
+
+const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
+const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
+
+if (!oldTokensDirMatch) {
+  console.error(`old_tokens_dir not found in code_diff.txt`);
+  process.exit(1);
+}
+
+const oldTokensDir = oldTokensDirMatch[1];
+
+if (!fs.existsSync(oldTokensDir)) {
+  console.error(`Directory not found: ${oldTokensDir}`);
+  process.exit(1);
+}
+
+const categorizedChanges = processFiles(newTokensDir, oldTokensDir);
+
+console.log('Writing categorized changes to file...');
+fs.writeFileSync(outputPath, categorizedChanges);
+
+console.log('Categorized changes written successfully.');
+console.log(categorizedChanges);
