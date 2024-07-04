@@ -75,4 +75,10 @@ jobs:
           rm -rf old_tokens
           mkdir old_tokens
           git checkout HEAD~1 -- tokens/
-          cp -r tokens/* old
+          cp -r tokens/* old_tokens/
+
+      - name: Upload categorized changes
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt

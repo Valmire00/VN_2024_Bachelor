@@ -206,7 +206,12 @@ const path = require('path');
 
 // Helper function to read a JSON file and return its content
 function readJSONFile(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  try {
+    return JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  } catch (err) {
+    console.error(`Failed to read or parse JSON file: ${filePath}`, err);
+    return {};
+  }
 }
 
 // Helper function to categorize changes between two JSON files
@@ -262,6 +267,8 @@ function main() {
   const codeDiffPath = process.argv[3];
   const outputPath = process.argv[4];
 
+  console.log(`Reading new tokens from: ${newTokensDir}`);
+
   if (!fs.existsSync(newTokensDir)) {
     console.error(`Directory not found: ${newTokensDir}`);
     process.exit(1);
@@ -269,6 +276,7 @@ function main() {
 
   // Read old tokens directory from code_diff.txt
   const codeDiff = fs.readFileSync(codeDiffPath, 'utf-8');
+  console.log(`Contents of code_diff.txt:\n${codeDiff}`); // Log the contents of code_diff.txt
   const oldTokensDirMatch = codeDiff.match(/old_tokens_dir:\s*(\S+)/);
 
   if (!oldTokensDirMatch) {
@@ -277,6 +285,7 @@ function main() {
   }
 
   const oldTokensDir = oldTokensDirMatch[1];
+  console.log(`Reading old tokens from: ${oldTokensDir}`);
 
   if (!fs.existsSync(oldTokensDir)) {
     console.error(`Directory not found: ${oldTokensDir}`);
