@@ -123,21 +123,27 @@ function compareTokens(oldTokens, newTokens) {
 
     Object.keys(newTokens).forEach(file => {
         if (!(file in oldTokens)) {
-            changes.added.push(`${file}: ${JSON.stringify(newTokens[file])}`);
+            changes.added.push(`File added: ${file}`);
         } else {
             Object.keys(newTokens[file]).forEach(token => {
                 if (!(token in oldTokens[file])) {
-                    changes.added.push(`${file}: ${token} -> ${JSON.stringify(newTokens[file][token])}`);
+                    changes.added.push(`Added in ${file}: ${token} with value ${JSON.stringify(newTokens[file][token])}`);
                 } else if (JSON.stringify(newTokens[file][token]) !== JSON.stringify(oldTokens[file][token])) {
-                    changes.modified.push(`${file}: ${token} from ${JSON.stringify(oldTokens[file][token])} to ${JSON.stringify(newTokens[file][token])}`);
+                    changes.modified.push(`Modified in ${file}: ${token} from ${JSON.stringify(oldTokens[file][token])} to ${JSON.stringify(newTokens[file][token])}`);
                 }
             });
 
             Object.keys(oldTokens[file]).forEach(token => {
                 if (!(token in newTokens[file])) {
-                    changes.removed.push(`${file}: ${token} -> ${JSON.stringify(oldTokens[file][token])}`);
+                    changes.removed.push(`Removed from ${file}: ${token}`);
                 }
             });
+        }
+    });
+
+    Object.keys(oldTokens).forEach(file => {
+        if (!(file in newTokens)) {
+            changes.removed.push(`File removed: ${file}`);
         }
     });
 
@@ -147,18 +153,17 @@ function compareTokens(oldTokens, newTokens) {
 function main() {
     const newTokensDir = process.argv[2];
     const oldTokensDir = 'old_tokens';
+    const categorizedChangesPath = process.argv[3];
 
     const newTokens = getTokens(newTokensDir);
     const oldTokens = getTokens(oldTokensDir);
 
     const changes = compareTokens(oldTokens, newTokens);
 
-    const categorizedChangesPath = process.argv[4];
-    const categorizedChanges = `
-        Added Tokens: \n${changes.added.join('\n')}
-        Removed Tokens: \n${changes.removed.join('\n')}
-        Modified Tokens: \n${changes.modified.join('\n')}
-    `;
+    let categorizedChanges = 'Changes:\n';
+    categorizedChanges += changes.added.length ? `Added Tokens:\n${changes.added.join('\n')}\n` : '';
+    categorizedChanges += changes.removed.length ? `Removed Tokens:\n${changes.removed.join('\n')}\n` : '';
+    categorizedChanges += changes.modified.length ? `Modified Tokens:\n${changes.modified.join('\n')}\n` : '';
 
     fs.writeFileSync(categorizedChangesPath, categorizedChanges);
     console.log('Categorized changes written successfully.');
