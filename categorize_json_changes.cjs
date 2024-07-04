@@ -121,6 +121,7 @@ function compareTokens(oldTokens, newTokens) {
         modified: []
     };
 
+    // Check for new or modified tokens
     Object.keys(newTokens).forEach(file => {
         if (!(file in oldTokens)) {
             changes.added.push(file);
@@ -132,7 +133,14 @@ function compareTokens(oldTokens, newTokens) {
                     changes.modified.push(`${file}: ${token}`);
                 }
             });
+        }
+    });
 
+    // Check for removed tokens
+    Object.keys(oldTokens).forEach(file => {
+        if (!(file in newTokens)) {
+            changes.removed.push(file);
+        } else {
             Object.keys(oldTokens[file]).forEach(token => {
                 if (!(token in newTokens[file])) {
                     changes.removed.push(`${file}: ${token}`);
