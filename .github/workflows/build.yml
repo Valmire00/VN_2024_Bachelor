@@ -61,7 +61,7 @@ jobs:
           git add .
           git commit -m 'Apply Stylelint fixes'
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
-          git push origin HEAD:refs/heads/$BRANCH_NAME
+          git push origin HEAD:$BRANCH_NAME
 
       - name: Generate code diff
         run: git diff HEAD~1 HEAD > code_diff.txt
