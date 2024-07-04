@@ -217,19 +217,23 @@ function categorizeChanges(newTokens, oldTokens) {
   const simpleChanges = [];
   const criticalChanges = [];
 
-  for (const [key, newValue] of Object.entries(newTokens)) {
-    const oldValue = oldTokens[key];
+  for (const [file, newProps] of Object.entries(newTokens)) {
+    const oldProps = oldTokens[file] || {};
 
-    if (oldValue === undefined) {
-      criticalChanges.push(`Added: ${key} with value ${JSON.stringify(newValue)}`);
-    } else if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
-      simpleChanges.push(`Modified: ${key} from ${JSON.stringify(oldValue)} to ${JSON.stringify(newValue)}`);
+    for (const [key, newValue] of Object.entries(newProps)) {
+      const oldValue = oldProps[key];
+
+      if (oldValue === undefined) {
+        criticalChanges.push(`Added in ${file}: ${key} with value ${JSON.stringify(newValue)}`);
+      } else if (JSON.stringify(newValue) !== JSON.stringify(oldValue)) {
+        simpleChanges.push(`Modified in ${file}: ${key} from ${JSON.stringify(oldValue)} to ${JSON.stringify(newValue)}`);
+      }
     }
-  }
 
-  for (const key of Object.keys(oldTokens)) {
-    if (!newTokens.hasOwnProperty(key)) {
-      criticalChanges.push(`Removed: ${key}`);
+    for (const key of Object.keys(oldProps)) {
+      if (!newProps.hasOwnProperty(key)) {
+        criticalChanges.push(`Removed from ${file}: ${key}`);
+      }
     }
   }
 
@@ -247,32 +251,27 @@ function main() {
     process.exit(1);
   }
 
-  const categorizedChanges = [];
+  const newTokens = {};
+  const oldTokens = {};
 
   fs.readdirSync(newTokensDir).forEach(file => {
-    if (file.endsWith('.json') && fs.existsSync(path.join(oldTokensDir, file))) {
-      const newTokens = readJSONFile(path.join(newTokensDir, file));
-      const oldTokens = readJSONFile(path.join(oldTokensDir, file));
-
-      const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens);
-
-      if (simpleChanges.length > 0 || criticalChanges.length > 0) {
-        categorizedChanges.push(`File: ${file}`);
-        if (simpleChanges.length > 0) {
-          categorizedChanges.push('Simple Changes:');
-          categorizedChanges.push(...simpleChanges);
-        }
-        if (criticalChanges.length > 0) {
-          categorizedChanges.push('Critical Changes:');
-          categorizedChanges.push(...criticalChanges);
-        }
-      } else {
-        categorizedChanges.push(`File: ${file} - No changes detected.`);
-      }
+    if (file.endsWith('.json')) {
+      const data = readJSONFile(path.join(newTokensDir, file));
+      newTokens[file] = data;
     }
   });
 
-  fs.writeFileSync(outputPath, categorizedChanges.join('\n'));
+  fs.readdirSync(oldTokensDir).forEach(file => {
+    if (file.endsWith('.json')) {
+      const data = readJSONFile(path.join(oldTokensDir, file));
+      oldTokens[file] = data;
+    }
+  });
+
+  const { simpleChanges, criticalChanges } = categorizeChanges(newTokens, oldTokens);
+
+  const output = `Simple Changes:\n${simpleChanges.join('\n')}\n\nCritical Changes:\n${criticalChanges.join('\n')}`;
+  fs.writeFileSync(outputPath, output);
   console.log('Categorized changes written successfully.');
 }
 
