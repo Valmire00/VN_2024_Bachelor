@@ -46,16 +46,11 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Generate code diff
-        run: |
-          echo "old_tokens_dir: old_tokens" > code_diff.txt
-          git diff HEAD~1 HEAD >> code_diff.txt
-
-      - name: Print code_diff.txt for debugging
-        run: cat code_diff.txt
+      - name: Copy tokens directory
+        run: cp -r tokens tokens_previous
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
+        run: node categorizeChanges.cjs tokens_previous tokens categorized_changes.txt
 
       - name: Commit and push changes
         if: success()
@@ -65,8 +60,8 @@ jobs:
           BRANCH_NAME=${{ github.head_ref }}
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add .
-          git commit -m 'Apply Stylelint fixes'
+          git add categorized_changes.txt
+          git commit -m 'Categorized token changes'
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
 
