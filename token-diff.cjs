@@ -1,8 +1,8 @@
 const fs = require('fs');
 const diff = require('deep-diff').diff;
 
-const oldFile = JSON.parse(fs.readFileSync('path/to/old/file.json', 'utf8'));
-const newFile = JSON.parse(fs.readFileSync('path/to/new/file.json', 'utf8'));
+const oldFile = JSON.parse(fs.readFileSync('old_tokens/new_tokens.json', 'utf8'));
+const newFile = JSON.parse(fs.readFileSync('tokens/new_tokens.json', 'utf8'));
 
 const differences = diff(oldFile, newFile);
 
