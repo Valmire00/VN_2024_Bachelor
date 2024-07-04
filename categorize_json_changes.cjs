@@ -254,21 +254,19 @@ function main() {
   const newTokens = {};
   const oldTokens = {};
 
+  // Read new tokens
   fs.readdirSync(newTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(newTokensDir, file));
-      if (data && data.properties) {
-        newTokens[file] = data.properties;
-      }
+      newTokens[file] = data;
     }
   });
 
+  // Read old tokens
   fs.readdirSync(oldTokensDir).forEach(file => {
     if (file.endsWith('.json')) {
       const data = readJSONFile(path.join(oldTokensDir, file));
-      if (data && data.properties) {
-        oldTokens[file] = data.properties;
-      }
+      oldTokens[file] = data;
     }
   });
 
