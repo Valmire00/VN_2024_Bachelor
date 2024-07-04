@@ -1,11 +1,12 @@
 /**
  * Do not edit directly
- * Generated on Thu, 04 Jul 2024 20:52:42 GMT
+ * Generated on Thu, 04 Jul 2024 20:54:03 GMT
  */
 
 :root {
   --property-theme-variables-new-theme-accent-va-secondary: #4465;
   --property-theme-variables-new-theme-accent-va-success: #778399;
+  --property-theme-variables-new-theme-accent-va-info: #10aabc;
   --properties-theme-variables-vuestic-light-accent-va-warning: #ffd43c;
   --properties-theme-variables-vuestic-light-background-va-background-primary: #fff;
   --properties-theme-variables-vuestic-light-background-va-background-secondary: #fff;
