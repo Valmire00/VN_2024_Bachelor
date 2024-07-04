@@ -42,7 +42,7 @@ jobs:
         run: ls -la dist/theme
 
       - name: Run Stylelint
-        run: npx stylelint 'dist/theme/*..css' --fix
+        run: npx stylelint 'dist/theme/*.css' --fix
 
       - name: Initialize old tokens if not present
         run: |
