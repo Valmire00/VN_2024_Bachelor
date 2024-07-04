@@ -46,25 +46,20 @@ jobs:
       - name: Run Stylelint
         run: npx stylelint 'dist/theme/*.css' --fix
 
-      - name: Extract old tokens
-        run: |
-          mkdir -p old_tokens
-          git checkout HEAD~1 -- tokens/
-          cp -r tokens/* old_tokens/
-
       - name: Generate code diff
         run: |
           echo "old_tokens_dir: old_tokens" > code_diff.txt
           git diff HEAD~1 HEAD >> code_diff.txt
 
+      - name: Extract old tokens
+        run: |
+          rm -rf old_tokens
+          mkdir old_tokens
+          git checkout HEAD~1 -- tokens/
+          cp -r tokens/* old_tokens/
+
       - name: Categorize JSON changes
         run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
-
-      - name: Upload categorized changes
-        uses: actions/upload-artifact@v2
-        with:
-          name: categorized-changes
-          path: categorized_changes.txt
 
       - name: Commit and push changes
         if: success()
@@ -78,3 +73,9 @@ jobs:
           git commit -m 'Apply Stylelint fixes'
           git pull origin $BRANCH_NAME --rebase || git rebase --abort
           git push origin HEAD:$BRANCH_NAME
+
+      - name: Upload categorized changes
+        uses: actions/upload-artifact@v2
+        with:
+          name: categorized-changes
+          path: categorized_changes.txt
