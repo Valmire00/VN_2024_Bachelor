@@ -3,16 +3,7 @@
     "theme-variables-vuestic-light-accent-va-primary": {
       "value": "#154ec1"
     },
-    "theme-variables-vuestic-light-accent-va-secondary": {
-      "value": "#767c88"
-    },
-    "theme-variables-vuestic-light-accent-va-success": {
-      "value": "#3d9209"
-    },
-    "theme-variables-vuestic-light-accent-va-info": {
-      "value": "#158de3"
-    },
-    "theme-variables-vuestic-light-accent-va-warning": {
+   "theme-variables-vuestic-light-accent-va-warning": {
       "value": "#ffd43a"
     },
     "theme-variables-vuestic-light-background-va-background-primary": {
@@ -22,7 +13,7 @@
       "value": "#ffffff"
     },
     "theme-variables-vuestic-light-background-va-background-element": {
-      "value": "#ecf0f3"
+      "value": "#ecf0f1"
     },
     "theme-variables-vuestic-light-background-va-background-border": {
       "value": "#dee5f2"
@@ -34,7 +25,7 @@
       "value": "#ffffff"
     },
     "theme-variables-vuestic-light-utility-va-shadow": {
-      "value": "rgba(0, 0, 0, 0.1200)"
+      "value": "rgba(5, 0, 0, 0.1200)"
     },
     "theme-variables-vuestic-light-utility-va-focus": {
       "value": "#49a8ff"
