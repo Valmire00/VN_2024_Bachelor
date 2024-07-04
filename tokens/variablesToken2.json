@@ -3,9 +3,6 @@
     "theme-variables-vuestic-light-accent-va-info": {
       "value": "#158de3"
     },
-    "theme-variables-vuestic-light-accent-va-danger": {
-      "value": "#e42222"
-    },
     "theme-variables-vuestic-light-accent-va-warning": {
       "value": "#ffd43a"
     },
@@ -22,7 +19,7 @@
       "value": "#dee5f2"
     },
     "theme-variables-vuestic-light-text-va-text-primary": {
-      "value": "#262824"
+      "value": "#262825"
     },
     "theme-variables-vuestic-light-text-va-text-inverted": {
       "value": "#ffffff"
@@ -37,7 +34,7 @@
       "value": "#ffffff"
     },
     "theme-variables-vuestic-light-typography-va-text-selected": {
-      "value": "#b3d4fc"
+      "value": "#b2d4fc"
     },
     "theme-variables-vuestic-light-typography-va-text-highlighted": {
       "value": "rgba(255, 197, 39, 0.3100)"
