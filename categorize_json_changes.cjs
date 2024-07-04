@@ -288,21 +288,21 @@ main();
 const fs = require('fs');
 const path = require('path');
 
-const tokensDir = path.join(__dirname, 'tokens');
-const oldTokensDir = path.join(__dirname, 'old_tokens');
-const changesFile = path.join(__dirname, 'categorized_changes.txt');
+function readJSONFile(filePath) {
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
 
-const categorizeChanges = (oldData, newData) => {
+function categorizeChanges(oldData, newData) {
     const simpleChanges = [];
     const criticalChanges = [];
 
     const allKeys = new Set([...Object.keys(oldData), ...Object.keys(newData)]);
 
     allKeys.forEach(key => {
-        if (!oldData.hasOwnProperty(key)) {
-            simpleChanges.push(`Added token: ${key}`);
-        } else if (!newData.hasOwnProperty(key)) {
-            criticalChanges.push(`Deleted token: ${key}`);
+        if (!(key in oldData)) {
+            simpleChanges.push(`Added token: ${key} with value ${newData[key]}`);
+        } else if (!(key in newData)) {
+            criticalChanges.push(`Deleted token: ${key} with value ${oldData[key]}`);
         } else if (JSON.stringify(oldData[key]) !== JSON.stringify(newData[key])) {
             simpleChanges.push(`Modified token: ${key} from ${JSON.stringify(oldData[key])} to ${JSON.stringify(newData[key])}`);
         }
@@ -313,9 +313,12 @@ const categorizeChanges = (oldData, newData) => {
     });
 
     return { simpleChanges, criticalChanges };
-};
+}
 
-const processFiles = () => {
+function processFiles() {
+    const tokensDir = path.join(__dirname, 'tokens');
+    const oldTokensDir = path.join(__dirname, 'old_tokens');
+    const changesFile = path.join(__dirname, 'categorized_changes.txt');
     const files = fs.readdirSync(tokensDir);
     let report = '';
 
@@ -323,13 +326,12 @@ const processFiles = () => {
         const filePath = path.join(tokensDir, file);
         const oldFilePath = path.join(oldTokensDir, file);
 
-        if (!fs.existsSync(oldFilePath)) {
-            fs.copyFileSync(filePath, oldFilePath);
-            return;
+        let oldData = {};
+        if (fs.existsSync(oldFilePath)) {
+            oldData = readJSONFile(oldFilePath);
         }
 
-        const oldData = JSON.parse(fs.readFileSync(oldFilePath, 'utf8'));
-        const newData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        const newData = readJSONFile(filePath);
 
         const { simpleChanges, criticalChanges } = categorizeChanges(oldData, newData);
 
@@ -351,10 +353,10 @@ const processFiles = () => {
             }
         }
 
-        fs.copyFileSync(filePath, oldFilePath);
+        fs.writeFileSync(oldFilePath, JSON.stringify(newData, null, 2));
     });
 
     fs.writeFileSync(changesFile, report, 'utf8');
-};
+}
 
 processFiles();
