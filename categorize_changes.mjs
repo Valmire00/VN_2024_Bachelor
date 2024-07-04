@@ -1,4 +1,3 @@
-import { fileURLToPath } from 'url';
 /*
 const fs = require('fs');
 const path = require('path');
@@ -235,6 +234,8 @@ function readJSONFile(filePath) {
 
 main();
 */
+
+import { fileURLToPath } from 'url';
 import fs from 'fs';
 import path from 'path';
 
@@ -272,10 +273,11 @@ async function main() {
           categorizedChanges.removed.push({ file, key });
           break;
         case 'modified':
-          categorizedChanges.modified.push({ file, key, oldValue: delta[key][0], newValue: delta[key][1] });
-          break;
-        case 'detailed':
-          categorizedChanges.modified.push({ file, key, changes: delta[key] });
+          if (Array.isArray(delta[key]) && delta[key].length === 2) {
+            categorizedChanges.modified.push({ file, key, oldValue: delta[key][0], newValue: delta[key][1] });
+          } else {
+            categorizedChanges.modified.push({ file, key, changes: delta[key] });
+          }
           break;
       }
     });
@@ -322,7 +324,7 @@ function detectChangeType(delta) {
     if (delta.length === 1 && delta[0] === undefined) return 'removed';
     if (delta.length === 2) return 'modified';
   }
-  return 'detailed';
+  return 'modified';
 }
 
 function readJSONFile(filePath) {
