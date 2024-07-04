@@ -1,9 +1,32 @@
 /**
  * Do not edit directly
- * Generated on Thu, 04 Jul 2024 11:53:46 GMT
+ * Generated on Thu, 04 Jul 2024 11:57:48 GMT
  */
 
 :root {
+  --theme-variables-vuestic-light-accent-va-neutral: #ababab;
+  --theme-variables-vuestic-light-accent-va-light: #f0f0f0;
+  --theme-variables-vuestic-light-accent-va-dark: #333;
+  --theme-variables-vuestic-light-background-va-overlay: rgba(0, 0, 0, 0.5);
+  --theme-variables-vuestic-light-text-va-text-quaternary: #9e9e9e;
+  --theme-variables-vuestic-light-utility-va-margin: 16px;
+  --theme-variables-vuestic-light-utility-va-padding: 12px;
+  --theme-variables-vuestic-dark-accent-va-neutral: #8a8a8a;
+  --theme-variables-vuestic-dark-background-va-overlay: rgba(255, 255, 255, 0.2);
+  --theme-variables-vuestic-dark-text-va-text-quaternary: #b3b3b3;
+  --theme-variables-vuestic-dark-utility-va-margin: 20px;
+  --theme-variables-vuestic-dark-utility-va-padding: 14px;
+  --theme-variables-poodle-accent-va-neutral: #777;
+  --theme-variables-poodle-background-va-overlay: rgba(0, 0, 0, 0.1);
+  --theme-variables-poodle-text-va-text-quaternary: #666;
+  --theme-variables-poodle-utility-va-margin: 18px;
+  --theme-variables-poodle-utility-va-padding: 15px;
+  --component-variables-default-card-va-card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --component-variables-default-card-va-card-border: 1px solid #e0e0e0;
+  --component-variables-default-card-va-card-margin: 10px;
+  --component-variables-default-tooltip-va-tooltip-opacity: 0.9;
+  --component-variables-default-tooltip-va-tooltip-arrow-size: 8px;
+  --component-variables-default-tooltip-va-tooltip-margin: 5px;
   --properties-theme-variables-vuestic-light-accent-va-primary: #154ec1;
   --properties-theme-variables-vuestic-light-accent-va-secondary: #767c88;
   --properties-theme-variables-vuestic-light-accent-va-success: #3d9209;
