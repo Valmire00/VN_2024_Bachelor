@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Fetch all history to ensure we can rebase
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -71,7 +71,7 @@ jobs:
           cp -r tokens/* old_tokens/
 
       - name: Categorize JSON changes
-        run: node categorize_json_changes.cjs tokens/ old_tokens categorized_changes.txt
+        run: node categorize_json_changes.cjs tokens/ code_diff.txt categorized_changes.txt
 
       - name: Upload categorized changes
         uses: actions/upload-artifact@v2
