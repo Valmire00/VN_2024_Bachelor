@@ -1,12 +1,5 @@
 {
   "properties": {
-  
-    "theme-variables-vuestic-light-accent-va-warning": {
-      "value": "#ecf0f1"
-    },
-    "theme-variables-vuestic-light-background-va-background-primary": {
-      "value": "#ffffff"
-    },
     "theme-variables-vuestic-light-background-va-background-secondary": {
       "value": "#ffffff"
     },
