@@ -1,17 +1,8 @@
 Modified:
 Modified - File: new_tokens.json, Key: property, Changes: {
-  "theme-variables-new-theme-accent-va-informa": [
+  "theme-variables-new-theme-accent-va-info": [
     {
-      "value": "#113335"
-    },
-    0,
-    0
-  ]
-}
-Modified - File: variablesToken2.json, Key: properties, Changes: {
-  "theme-variables-vuestic-light-accent-va-warning": [
-    {
-      "value": "#ffd43b"
+      "value": "#10aabc"
     },
     0,
     0

@@ -3,23 +3,9 @@
     "file": "new_tokens.json",
     "delta": {
       "property": {
-        "theme-variables-new-theme-accent-va-informa": [
+        "theme-variables-new-theme-accent-va-info": [
           {
-            "value": "#113335"
-          },
-          0,
-          0
-        ]
-      }
-    }
-  },
-  {
-    "file": "variablesToken2.json",
-    "delta": {
-      "properties": {
-        "theme-variables-vuestic-light-accent-va-warning": [
-          {
-            "value": "#ffd43b"
+            "value": "#10aabc"
           },
           0,
           0
