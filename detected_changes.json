@@ -2,19 +2,26 @@
   {
     "file": "new_tokens.json",
     "changes": {
-      "added": [
+      "added": [],
+      "modified": [
         {
           "path": [
             "property",
-            "theme-variables-new-theme-accent-va-success"
+            "theme-variables-new-theme-accent-va-success",
+            "value"
           ],
-          "value": {
-            "value": "#778399"
-          }
+          "oldValue": "#778399",
+          "newValue": "#778310"
         }
       ],
-      "modified": [],
-      "removed": []
+      "removed": [
+        {
+          "path": [
+            "property",
+            "theme-variables-new-theme-accent-va-informa"
+          ]
+        }
+      ]
     }
   },
   {
@@ -24,32 +31,33 @@
         {
           "path": [
             "properties",
-            "theme-variables-vuestic-light-background-va-background-secondary"
+            "theme-variables-vuestic-light-background-va-background-primary"
           ],
           "value": {
             "value": "#ffffff"
-          }
-        },
-        {
-          "path": [
-            "properties",
-            "theme-variables-vuestic-light-text-va-text-inverted"
-          ],
-          "value": {
-            "value": "#ffffff"
-          }
-        },
-        {
-          "path": [
-            "properties",
-            "theme-variables-vuestic-light-utility-va-shadow"
-          ],
-          "value": {
-            "value": "rgba(1, 0, 0, 0.1200)"
           }
         }
       ],
-      "modified": [],
+      "modified": [
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-text-va-text-primary",
+            "value"
+          ],
+          "oldValue": "#262825",
+          "newValue": "#262824"
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-utility-va-shadow",
+            "value"
+          ],
+          "oldValue": "rgba(1, 0, 0, 0.1200)",
+          "newValue": "rgba(0, 0, 0, 0.1200)"
+        }
+      ],
       "removed": []
     }
   }
