@@ -1,7 +1,2 @@
-Added:
-Added - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-info, Value: {
-  "value": "#10aabc"
-}
-Added - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-informa, Value: {
-  "value": "#113335"
-}
+Modified:
+Modified - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-text-va-text-primary.value, Old Value: "#262824", New Value: "#262825"

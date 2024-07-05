@@ -1,28 +1,19 @@
 [
   {
-    "file": "new_tokens.json",
+    "file": "variablesToken2.json",
     "changes": {
-      "added": [
+      "added": [],
+      "modified": [
         {
           "path": [
-            "property",
-            "theme-variables-new-theme-accent-va-info"
+            "properties",
+            "theme-variables-vuestic-light-text-va-text-primary",
+            "value"
           ],
-          "value": {
-            "value": "#10aabc"
-          }
-        },
-        {
-          "path": [
-            "property",
-            "theme-variables-new-theme-accent-va-informa"
-          ],
-          "value": {
-            "value": "#113335"
-          }
+          "oldValue": "#262824",
+          "newValue": "#262825"
         }
       ],
-      "modified": [],
       "removed": []
     }
   }
