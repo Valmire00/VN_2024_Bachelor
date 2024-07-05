@@ -1,1 +1,6 @@
-No changes to categorize.
+Added:
+Added - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-informa, Value: {
+  "value": "#113335"
+}
+Modified:
+Modified - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-secondary.value, Old Value: "#4465", New Value: "#4464"
