@@ -1,2 +1,14 @@
-Removed:
-Removed - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-success
+Added:
+Added - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-success, Value: {
+  "value": "#778399"
+}
+Added:
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-background-va-background-secondary, Value: {
+  "value": "#ffffff"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-text-va-text-inverted, Value: {
+  "value": "#ffffff"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-utility-va-shadow, Value: {
+  "value": "rgba(1, 0, 0, 0.1200)"
+}

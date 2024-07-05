@@ -2,16 +2,55 @@
   {
     "file": "new_tokens.json",
     "changes": {
-      "added": [],
-      "modified": [],
-      "removed": [
+      "added": [
         {
           "path": [
             "property",
             "theme-variables-new-theme-accent-va-success"
-          ]
+          ],
+          "value": {
+            "value": "#778399"
+          }
         }
-      ]
+      ],
+      "modified": [],
+      "removed": []
+    }
+  },
+  {
+    "file": "variablesToken2.json",
+    "changes": {
+      "added": [
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-background-va-background-secondary"
+          ],
+          "value": {
+            "value": "#ffffff"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-text-va-text-inverted"
+          ],
+          "value": {
+            "value": "#ffffff"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-utility-va-shadow"
+          ],
+          "value": {
+            "value": "rgba(1, 0, 0, 0.1200)"
+          }
+        }
+      ],
+      "modified": [],
+      "removed": []
     }
   }
 ]
