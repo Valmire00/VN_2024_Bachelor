@@ -155,7 +155,7 @@ function readJSONFile(filePath) {
   }
 }
 
-function categorizeChanges(delta) {
+function categorizeChanges(delta, oldContent, newContent) {
   const changes = {
     added: [],
     modified: [],
@@ -179,6 +179,20 @@ function categorizeChanges(delta) {
   }
 
   recursiveCategorize(delta);
+
+  // Check for removed tokens
+  function recursiveCheckRemoved(oldObj, newObj, path = []) {
+    for (const key in oldObj) {
+      if (!(key in newObj)) {
+        changes.removed.push({ path: [...path, key] });
+      } else if (typeof oldObj[key] === 'object' && oldObj[key] !== null) {
+        recursiveCheckRemoved(oldObj[key], newObj[key], [...path, key]);
+      }
+    }
+  }
+
+  recursiveCheckRemoved(oldContent, newContent);
+
   return changes;
 }
 
@@ -203,7 +217,7 @@ async function main() {
 
     const delta = diff(oldContent, newContent);
     if (delta) {
-      const categorizedChanges = categorizeChanges(delta);
+      const categorizedChanges = categorizeChanges(delta, oldContent, newContent);
       changes.push({ file, changes: categorizedChanges });
     }
   }
