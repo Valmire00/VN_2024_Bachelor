@@ -1,1 +1,1 @@
-          rm -rf node_modules package-lock.json  # Löscht node_modules und package-lock.json
+rm -rf node_modules package-lock.json  # Löscht node_modules und package-lock.json

@@ -190,18 +190,16 @@ async function main() {
   const newFiles = new Set(fs.readdirSync(newTokensDir).filter(file => file.endsWith('.json')));
   const oldFiles = new Set(fs.readdirSync(oldTokensDir).filter(file => file.endsWith('.json')));
 
-  // Find common files in both new and old directories
-  const commonFiles = [...newFiles].filter(file => oldFiles.has(file));
+  const allFiles = new Set([...newFiles, ...oldFiles]);
 
   const changes = [];
 
-  for (const file of commonFiles) {
+  for (const file of allFiles) {
     const newPath = path.join(newTokensDir, file);
     const oldPath = path.join(oldTokensDir, file);
-    const newContent = readJSONFile(newPath);
-    const oldContent = readJSONFile(oldPath);
 
-    if (!newContent || !oldContent) continue;
+    const newContent = fs.existsSync(newPath) ? readJSONFile(newPath) : {};
+    const oldContent = fs.existsSync(oldPath) ? readJSONFile(oldPath) : {};
 
     const delta = diff(oldContent, newContent);
     if (delta) {
