@@ -1,1 +1,10 @@
-No changes to categorize.
+Added:
+Added - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-informa, Value: {
+  "value": "#113335"
+}
+Modified:
+Modified - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-success.value, Old Value: "#778310", New Value: "#778399"
+Modified:
+Modified - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-utility-va-shadow.value, Old Value: "rgba(0, 0, 0, 0.1200)", New Value: "rgba(1, 0, 0, 0.1200)"
+Removed:
+Removed - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-text-va-text-primary

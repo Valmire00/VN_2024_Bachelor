@@ -1,1 +1,55 @@
-No changes to categorize.
+[
+  {
+    "file": "new_tokens.json",
+    "changes": {
+      "added": [
+        {
+          "path": [
+            "property",
+            "theme-variables-new-theme-accent-va-informa"
+          ],
+          "value": {
+            "value": "#113335"
+          }
+        }
+      ],
+      "modified": [
+        {
+          "path": [
+            "property",
+            "theme-variables-new-theme-accent-va-success",
+            "value"
+          ],
+          "oldValue": "#778310",
+          "newValue": "#778399"
+        }
+      ],
+      "removed": []
+    }
+  },
+  {
+    "file": "variablesToken2.json",
+    "changes": {
+      "added": [],
+      "modified": [
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-utility-va-shadow",
+            "value"
+          ],
+          "oldValue": "rgba(0, 0, 0, 0.1200)",
+          "newValue": "rgba(1, 0, 0, 0.1200)"
+        }
+      ],
+      "removed": [
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-text-va-text-primary"
+          ]
+        }
+      ]
+    }
+  }
+]
