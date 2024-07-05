@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'tokens/**'
+      - 'tokens/*.json'
 
 permissions:
   contents: write
