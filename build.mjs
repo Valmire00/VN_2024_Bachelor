@@ -28,7 +28,7 @@ function convertJsonToStyleDictionaryFormat(data) {
   }
 
   traverse(data);
-  return { properties: result };
+  return result; // Direkt result zurückgeben
 }
 
 // Definieren Sie den Pfad zum Tokens-Ordner
