@@ -1,36 +1,28 @@
 [
   {
+    "file": "new_tokens.json",
+    "delta": {
+      "property": {
+        "theme-variables-new-theme-accent-va-informa": [
+          {
+            "value": "#113335"
+          },
+          0,
+          0
+        ]
+      }
+    }
+  },
+  {
     "file": "variablesToken2.json",
     "delta": {
       "properties": {
-        "theme-variables-vuestic-light-accent-va-warning": {
-          "value": [
-            "#ffd43c",
-            "#ffd43b"
-          ]
-        },
-        "theme-variables-vuestic-light-utility-va-focus": {
-          "value": [
-            "#49a2ff",
-            "#49a8ff"
-          ]
-        },
-        "theme-variables-vuestic-light-typography-va-link-color": {
-          "value": [
-            "#154ec6",
-            "#154ec1"
-          ]
-        },
-        "theme-variables-vuestic-light-border-va-form-border-width": {
-          "value": [
-            "20px",
-            "1px"
-          ]
-        },
-        "theme-variables-vuestic-light-text-va-text-inverted": [
+        "theme-variables-vuestic-light-accent-va-warning": [
           {
-            "value": "#ffffff"
-          }
+            "value": "#ffd43b"
+          },
+          0,
+          0
         ]
       }
     }
