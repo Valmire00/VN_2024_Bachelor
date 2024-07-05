@@ -1,2 +1,1 @@
-Modified:
-Modified - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-text-va-text-primary.value, Old Value: "#262824", New Value: "#262825"
+No changes to categorize.

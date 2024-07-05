@@ -1,8 +1,5 @@
 {
   "properties": {
-    "theme-variables-vuestic-light-background-va-background-secondary": {
-      "value": "#ffffff"
-    },
     "theme-variables-vuestic-light-text-va-text-primary": {
       "value": "#262825"
     },
