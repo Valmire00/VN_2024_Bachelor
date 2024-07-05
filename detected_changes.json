@@ -1,1 +1,23 @@
-No changes to categorize.
+[
+  {
+    "file": "variablesToken2.json",
+    "changes": {
+      "added": [],
+      "modified": [],
+      "removed": [
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-background-va-background-primary"
+          ]
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-background-va-background-secondary"
+          ]
+        }
+      ]
+    }
+  }
+]
