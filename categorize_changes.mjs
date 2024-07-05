@@ -273,11 +273,10 @@ async function main() {
           categorizedChanges.removed.push({ file, key });
           break;
         case 'modified':
-          if (Array.isArray(delta[key]) && delta[key].length === 2) {
-            categorizedChanges.modified.push({ file, key, oldValue: delta[key][0], newValue: delta[key][1] });
-          } else {
-            categorizedChanges.modified.push({ file, key, changes: delta[key] });
-          }
+          categorizedChanges.modified.push({ file, key, oldValue: delta[key][0], newValue: delta[key][1] });
+          break;
+        case 'detailed':
+          categorizedChanges.modified.push({ file, key, changes: delta[key] });
           break;
       }
     });
@@ -323,6 +322,9 @@ function detectChangeType(delta) {
     if (delta.length === 1 && delta[0] !== undefined) return 'added';
     if (delta.length === 1 && delta[0] === undefined) return 'removed';
     if (delta.length === 2) return 'modified';
+  }
+  if (typeof delta === 'object' && delta !== null) {
+    return 'detailed';
   }
   return 'modified';
 }
