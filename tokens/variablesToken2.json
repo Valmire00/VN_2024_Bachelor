@@ -1,13 +1,10 @@
 {
   "properties": {
-    "theme-variables-vuestic-light-background-va-background-primary": {
-      "value": "#ffffff"
-    },
     "theme-variables-vuestic-light-background-va-background-secondary": {
       "value": "#ffffff"
     },
     "theme-variables-vuestic-light-text-va-text-primary": {
-      "value": "#262824"
+      "value": "#262825"
     },
     "theme-variables-vuestic-light-text-va-text-inverted": {
       "value": "#ffffff"
