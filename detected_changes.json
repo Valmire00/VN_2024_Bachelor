@@ -1,55 +1,24 @@
 [
   {
-    "file": "new_tokens.json",
+    "file": "export.json",
     "changes": {
       "added": [
         {
           "path": [
-            "property",
-            "theme-variables-new-theme-accent-va-informa"
+            "property"
           ],
           "value": {
-            "value": "#113335"
+            "theme-variables-new-theme-accent-va-secondary": {
+              "value": "#4464"
+            },
+            "theme-variables-new-theme-accent-va-success": {
+              "value": "#778399"
+            }
           }
         }
       ],
-      "modified": [
-        {
-          "path": [
-            "property",
-            "theme-variables-new-theme-accent-va-success",
-            "value"
-          ],
-          "oldValue": "#778310",
-          "newValue": "#778399"
-        }
-      ],
+      "modified": [],
       "removed": []
-    }
-  },
-  {
-    "file": "variablesToken2.json",
-    "changes": {
-      "added": [],
-      "modified": [
-        {
-          "path": [
-            "properties",
-            "theme-variables-vuestic-light-utility-va-shadow",
-            "value"
-          ],
-          "oldValue": "rgba(0, 0, 0, 0.1200)",
-          "newValue": "rgba(1, 0, 0, 0.1200)"
-        }
-      ],
-      "removed": [
-        {
-          "path": [
-            "properties",
-            "theme-variables-vuestic-light-text-va-text-primary"
-          ]
-        }
-      ]
     }
   }
 ]
