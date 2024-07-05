@@ -2,37 +2,16 @@
   {
     "file": "new_tokens.json",
     "changes": {
-      "added": [
-        {
-          "path": [
-            "property",
-            "theme-variables-new-theme-accent-va-informa"
-          ],
-          "value": {
-            "value": "#113335"
-          }
-        }
-      ],
-      "modified": [
-        {
-          "path": [
-            "property",
-            "theme-variables-new-theme-accent-va-secondary",
-            "value"
-          ],
-          "oldValue": "#4465",
-          "newValue": "#4464"
-        }
-      ],
-      "removed": []
-    }
-  },
-  {
-    "file": "variablesToken2.json",
-    "changes": {
       "added": [],
       "modified": [],
-      "removed": []
+      "removed": [
+        {
+          "path": [
+            "property",
+            "theme-variables-new-theme-accent-va-success"
+          ]
+        }
+      ]
     }
   }
 ]
