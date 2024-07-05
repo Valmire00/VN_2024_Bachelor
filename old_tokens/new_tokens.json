@@ -5,6 +5,12 @@
     },
     "theme-variables-new-theme-accent-va-success": {
       "value": "#778399"
+    },
+    "theme-variables-new-theme-accent-va-info": {
+      "value": "#10aabc"
+    },
+    "theme-variables-new-theme-accent-va-informa": {
+      "value": "#113335"
     }
   }
 }

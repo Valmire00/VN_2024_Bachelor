@@ -1,16 +1,29 @@
 [
   {
     "file": "new_tokens.json",
-    "delta": {
-      "property": {
-        "theme-variables-new-theme-accent-va-info": [
-          {
+    "changes": {
+      "added": [
+        {
+          "path": [
+            "property",
+            "theme-variables-new-theme-accent-va-info"
+          ],
+          "value": {
             "value": "#10aabc"
-          },
-          0,
-          0
-        ]
-      }
+          }
+        },
+        {
+          "path": [
+            "property",
+            "theme-variables-new-theme-accent-va-informa"
+          ],
+          "value": {
+            "value": "#113335"
+          }
+        }
+      ],
+      "modified": [],
+      "removed": []
     }
   }
 ]

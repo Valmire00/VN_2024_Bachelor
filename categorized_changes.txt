@@ -1,10 +1,7 @@
-Modified:
-Modified - File: new_tokens.json, Key: property, Changes: {
-  "theme-variables-new-theme-accent-va-info": [
-    {
-      "value": "#10aabc"
-    },
-    0,
-    0
-  ]
+Added:
+Added - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-info, Value: {
+  "value": "#10aabc"
+}
+Added - File: new_tokens.json, Path: property.theme-variables-new-theme-accent-va-informa, Value: {
+  "value": "#113335"
 }
