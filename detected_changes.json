@@ -1,1 +1,101 @@
-No changes to categorize.
+[
+  {
+    "file": "variablesToken2.json",
+    "changes": {
+      "added": [
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-accent-va-primary"
+          ],
+          "value": {
+            "value": "#154ec1"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-accent-va-secondary"
+          ],
+          "value": {
+            "value": "#767c88"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-accent-va-success"
+          ],
+          "value": {
+            "value": "#3d9209"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-accent-va-info"
+          ],
+          "value": {
+            "value": "#158de3"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-accent-va-danger"
+          ],
+          "value": {
+            "value": "#e42222"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-background-va-background-primary"
+          ],
+          "value": {
+            "value": "#ffffff"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-background-va-background-secondary"
+          ],
+          "value": {
+            "value": "#ffffff"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-background-va-background-element"
+          ],
+          "value": {
+            "value": "#ecf0f1"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-background-va-background-border"
+          ],
+          "value": {
+            "value": "#dee5f1"
+          }
+        },
+        {
+          "path": [
+            "properties",
+            "theme-variables-vuestic-light-text-va-text-primary"
+          ],
+          "value": {
+            "value": "#262824"
+          }
+        }
+      ],
+      "modified": [],
+      "removed": []
+    }
+  }
+]

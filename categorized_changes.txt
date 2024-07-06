@@ -1,1 +1,31 @@
-No changes to categorize.
+Added:
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-accent-va-primary, Value: {
+  "value": "#154ec1"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-accent-va-secondary, Value: {
+  "value": "#767c88"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-accent-va-success, Value: {
+  "value": "#3d9209"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-accent-va-info, Value: {
+  "value": "#158de3"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-accent-va-danger, Value: {
+  "value": "#e42222"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-background-va-background-primary, Value: {
+  "value": "#ffffff"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-background-va-background-secondary, Value: {
+  "value": "#ffffff"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-background-va-background-element, Value: {
+  "value": "#ecf0f1"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-background-va-background-border, Value: {
+  "value": "#dee5f1"
+}
+Added - File: variablesToken2.json, Path: properties.theme-variables-vuestic-light-text-va-text-primary, Value: {
+  "value": "#262824"
+}
