@@ -13,8 +13,9 @@ permissions:
 
 jobs:
   lint-build-check:
-    runs-on: ubuntu-latest
     if: startsWith(github.head_ref, 'ui/')
+    runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout repository
